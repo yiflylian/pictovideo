@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PicDemo</string>
+    <string name="get_video_info">获取视频信息</string>
+</resources>

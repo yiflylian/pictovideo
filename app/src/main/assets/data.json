@@ -1,0 +1,1727 @@
+{
+    "assets": [
+        {
+            "h": 1280,
+            "id": "image_0",
+            "p": "2-1.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        },
+        {
+            "h": 1280,
+            "id": "image_1",
+            "p": "2-2.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        },
+        {
+            "h": 1280,
+            "id": "image_2",
+            "p": "2-3.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        },
+        {
+            "h": 1280,
+            "id": "image_3",
+            "p": "2-16.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        },
+        {
+            "h": 1280,
+            "id": "image_4",
+            "p": "2-19.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        },
+        {
+            "h": 1280,
+            "id": "image_5",
+            "p": "2-20.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        },
+        {
+            "h": 1280,
+            "id": "image_6",
+            "p": "2-18.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        },
+        {
+            "h": 1280,
+            "id": "image_7",
+            "p": "2-17.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        },
+        {
+            "h": 1280,
+            "id": "image_8",
+            "p": "2-21.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        },
+        {
+            "h": 1280,
+            "id": "image_9",
+            "p": "2-22.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        },
+        {
+            "h": 1280,
+            "id": "image_10",
+            "p": "2-23.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        },
+        {
+            "h": 1280,
+            "id": "image_11",
+            "p": "2-12.png",
+            "u": "",
+            "videoPath": "",
+            "w": 720
+        }
+    ],
+    "ddd": 0,
+    "elements": [],
+    "fr": 25,
+    "h": 1280,
+    "ip": 0,
+    "layers": [
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": true,
+            "height": 1280,
+            "ind": 1,
+            "ip": 334,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "2",
+            "nm": "#2.jpg",
+            "op": 355,
+            "picker": null,
+            "refId": "image_0",
+            "showTime": 0,
+            "sr": 1,
+            "st": 334,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": true,
+            "height": 1280,
+            "ind": 2,
+            "ip": 320,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "3",
+            "nm": "#3.jpg",
+            "op": 334,
+            "picker": null,
+            "refId": "image_1",
+            "showTime": 0,
+            "sr": 1,
+            "st": 320,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": true,
+            "height": 1280,
+            "ind": 3,
+            "ip": 308,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "5",
+            "nm": "#5.jpg",
+            "op": 320,
+            "picker": null,
+            "refId": "image_2",
+            "showTime": 0,
+            "sr": 1,
+            "st": 308,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": true,
+            "height": 1280,
+            "ind": 4,
+            "ip": 291,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "9",
+            "nm": "#9.jpg",
+            "op": 308,
+            "picker": null,
+            "refId": "image_3",
+            "showTime": 0,
+            "sr": 1,
+            "st": 291,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": true,
+            "height": 1280,
+            "ind": 5,
+            "ip": 286,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "6",
+            "nm": "#6.jpg",
+            "op": 291,
+            "picker": null,
+            "refId": "image_4",
+            "showTime": 0,
+            "sr": 1,
+            "st": 286,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": true,
+            "height": 1280,
+            "ind": 6,
+            "ip": 281,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "7",
+            "nm": "#7.jpg",
+            "op": 286,
+            "picker": null,
+            "refId": "image_5",
+            "showTime": 0,
+            "sr": 1,
+            "st": 103,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": true,
+            "height": 1280,
+            "ind": 7,
+            "ip": 264,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "4",
+            "nm": "#4.jpg",
+            "op": 281,
+            "picker": null,
+            "refId": "image_6",
+            "showTime": 0,
+            "sr": 1,
+            "st": 264,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": true,
+            "height": 1280,
+            "ind": 8,
+            "ip": 259,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "8",
+            "nm": "#8.jpg",
+            "op": 264,
+            "picker": null,
+            "refId": "image_7",
+            "showTime": 0,
+            "sr": 1,
+            "st": 259,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": true,
+            "height": 1280,
+            "ind": 9,
+            "ip": 254,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "10",
+            "nm": "#10.jpg",
+            "op": 259,
+            "picker": null,
+            "refId": "image_8",
+            "showTime": 0,
+            "sr": 1,
+            "st": 254,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": true,
+            "height": 1280,
+            "ind": 10,
+            "ip": 243,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "11",
+            "nm": "#11.jpg",
+            "op": 254,
+            "picker": null,
+            "refId": "image_9",
+            "showTime": 0,
+            "sr": 1,
+            "st": 243,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": true,
+            "ind": 11,
+            "ip": 240,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "12",
+            "nm": "#12.jpg",
+            "op": 243,
+            "picker": null,
+            "refId": "image_10",
+            "showTime": 0,
+            "sr": 1,
+            "st": 240,
+            "startTime": 0,
+            "ty": 2
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "height": 1280,
+            "ind": 12,
+            "ip": 224,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "1",
+            "nm": "#1.jpg",
+            "op": 240,
+            "picker": null,
+            "refId": "image_11",
+            "showTime": 9000,
+            "sr": 1,
+            "st": 224,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "height": 1280,
+            "ind": 13,
+            "ip": 210,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "2",
+            "nm": "#2.jpg",
+            "op": 224,
+            "picker": null,
+            "refId": "image_0",
+            "showTime": 8586,
+            "sr": 1,
+            "st": 210,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "height": 1280,
+            "ind": 14,
+            "ip": 197,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "3",
+            "nm": "#3.jpg",
+            "op": 210,
+            "picker": null,
+            "refId": "image_1",
+            "showTime": 8000,
+            "sr": 1,
+            "st": 197,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "height": 1280,
+            "ind": 15,
+            "ip": 185,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "5",
+            "nm": "#5.jpg",
+            "op": 197,
+            "picker": null,
+            "refId": "image_2",
+            "showTime": 7636,
+            "sr": 1,
+            "st": 185,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "height": 1280,
+            "ind": 16,
+            "ip": 181,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "9",
+            "nm": "#9.jpg",
+            "op": 185,
+            "picker": null,
+            "refId": "image_3",
+            "showTime": 7314,
+            "sr": 1,
+            "st": 181,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "height": 1280,
+            "ind": 17,
+            "ip": 178,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "8",
+            "nm": "#8.jpg",
+            "op": 181,
+            "picker": null,
+            "refId": "image_7",
+            "showTime": 7174,
+            "sr": 1,
+            "st": 178,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "height": 1280,
+            "ind": 18,
+            "ip": 170,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "4",
+            "nm": "#4.jpg",
+            "op": 178,
+            "picker": null,
+            "refId": "image_6",
+            "showTime": 7000,
+            "sr": 1,
+            "st": 170,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "height": 1280,
+            "ind": 19,
+            "ip": 157,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "6",
+            "nm": "#6.jpg",
+            "op": 170,
+            "picker": null,
+            "refId": "image_4",
+            "showTime": 6480,
+            "sr": 1,
+            "st": 157,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "height": 1280,
+            "ind": 20,
+            "ip": 154,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "7",
+            "nm": "#7.jpg",
+            "op": 157,
+            "picker": null,
+            "refId": "image_5",
+            "showTime": 6208,
+            "sr": 1,
+            "st": -24,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "height": 1280,
+            "ind": 21,
+            "ip": 149,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "10",
+            "nm": "#10.jpg",
+            "op": 154,
+            "picker": null,
+            "refId": "image_8",
+            "showTime": 6109,
+            "sr": 1,
+            "st": 149,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "height": 1280,
+            "ind": 22,
+            "ip": 142,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "11",
+            "nm": "#11.jpg",
+            "op": 149,
+            "picker": null,
+            "refId": "image_9",
+            "showTime": 5845,
+            "sr": 1,
+            "st": 142,
+            "startTime": 0,
+            "ty": 2,
+            "width": 720
+        },
+        {
+            "allowImage": true,
+            "allowVideo": true,
+            "ao": 0,
+            "bm": 0,
+            "cl": "jpg",
+            "ddd": 0,
+            "dropDefaultMedia": false,
+            "editPriority": 1,
+            "endTime": 0,
+            "freeze": false,
+            "ind": 23,
+            "ip": 0,
+            "ks": {
+                "a": {
+                    "a": 0,
+                    "ix": 1,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "o": {
+                    "a": 0,
+                    "ix": 11,
+                    "k": 100
+                },
+                "p": {
+                    "a": 0,
+                    "ix": 2,
+                    "k": [
+                        360,
+                        640,
+                        0
+                    ]
+                },
+                "r": {
+                    "a": 0,
+                    "ix": 10,
+                    "k": 0
+                },
+                "s": {
+                    "a": 0,
+                    "ix": 6,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ]
+                }
+            },
+            "ln": "12",
+            "nm": "#12.jpg",
+            "op": 142,
+            "picker": null,
+            "refId": "image_10",
+            "showTime": 5000,
+            "sr": 1,
+            "st": 0,
+            "startTime": 0,
+            "ty": 2
+        }
+    ],
+    "markers": [
+        {
+            "cm": "1",
+            "dr": 0,
+            "tm": 142
+        },
+        {
+            "cm": "2",
+            "dr": 0,
+            "tm": 149
+        },
+        {
+            "cm": "3",
+            "dr": 0,
+            "tm": 154
+        },
+        {
+            "cm": "4",
+            "dr": 0,
+            "tm": 157
+        },
+        {
+            "cm": "5",
+            "dr": 0,
+            "tm": 170
+        },
+        {
+            "cm": "6",
+            "dr": 0,
+            "tm": 178
+        },
+        {
+            "cm": "7",
+            "dr": 0,
+            "tm": 181
+        },
+        {
+            "cm": "8",
+            "dr": 0,
+            "tm": 185
+        },
+        {
+            "cm": "9",
+            "dr": 0,
+            "tm": 197
+        },
+        {
+            "cm": "10",
+            "dr": 0,
+            "tm": 210
+        },
+        {
+            "cm": "11",
+            "dr": 0,
+            "tm": 224
+        },
+        {
+            "cm": "12",
+            "dr": 0,
+            "tm": 240
+        },
+        {
+            "cm": "13",
+            "dr": 0,
+            "tm": 243
+        },
+        {
+            "cm": "14",
+            "dr": 0,
+            "tm": 254
+        },
+        {
+            "cm": "15",
+            "dr": 0,
+            "tm": 259
+        },
+        {
+            "cm": "16",
+            "dr": 0,
+            "tm": 264
+        },
+        {
+            "cm": "17",
+            "dr": 0,
+            "tm": 281
+        },
+        {
+            "cm": "18",
+            "dr": 0,
+            "tm": 286
+        },
+        {
+            "cm": "19",
+            "dr": 0,
+            "tm": 291
+        },
+        {
+            "cm": "20",
+            "dr": 0,
+            "tm": 308
+        },
+        {
+            "cm": "21",
+            "dr": 0,
+            "tm": 320
+        },
+        {
+            "cm": "22",
+            "dr": 0,
+            "tm": 334
+        }
+    ],
+    "nm": "内容导出",
+    "op": 355,
+    "settings": {
+        "backgroundAudio": "backgroundAudio.mp3",
+        "backgroundVideo": "backgroundVideo.mp4",
+        "blendMode": 0,
+        "coverTime": 0,
+        "duration": 14200,
+        "fps": 25,
+        "height": 1280,
+        "maskVideo": "maskVideo.mp4",
+        "width": 720
+    },
+    "type": "templet",
+    "v": "5.1.10",
+    "version": "2.5.13",
+    "w": 720
+}
