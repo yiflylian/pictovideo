@@ -5,10 +5,8 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.media.MediaCodecInfo
-import android.media.MediaCodecList
-import android.media.MediaMetadataRetriever
-import android.media.MediaMuxer
+import android.media.*
+import android.media.MediaFormat.*
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -24,7 +22,9 @@ import jp.co.cyberagent.android.gpuimage.filter.GPUImageAlphaBlendFilter
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageTwoInputFilter
 import kotlinx.android.synthetic.main.activity_main.*
 import wseemann.media.FFmpegMediaMetadataRetriever
+import xyz.mylib.creator.task.AvcExecuteAsyncTask
 import java.io.File
+import java.nio.ByteBuffer
 
 
 class MainActivity : AppCompatActivity() {
@@ -126,10 +126,61 @@ class MainActivity : AppCompatActivity() {
         b_filter.bitmap =  result
         bitmap.setFilter(b_filter)
         val b_result =bitmap.bitmapWithFilterApplied
-//        mmr.geth
+        var bytes =ByteArray(b_result.getRowBytes() * b_result.getHeight())
+        var  byteBuffer = ByteBuffer.wrap(bytes)
+             b_result.copyPixelsFromBuffer(byteBuffer)
         imageView3.setImageBitmap(b_result)
+       var MediaUtils = MediaUtils()
+        MediaUtils .getMediaCodecList()
+        var width =720
+        var height=1280
+        var  framerate =20
+        var frame_interval =10
+       val  TIME_OUT_US = 10000L
+        Thread{
+            //创建媒体格式
+            var mediaFormat =MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC,width,height)
+           var  colorFormat= MediaUtils.getColorFormat()
+            //设置视频的码率
+            //1080P最好在5Mbps/5120Kbps到8Mbps/8192Kbps之间,因为低于5Mbps不够清晰,而大于8Mbps视频文件会过大，比如我们设置8Mbps,则是1024*1024*8
+            mediaFormat.apply {
 
-        MediaUtils().getMediaCodecList()
+                setInteger(KEY_COLOR_FORMAT,colorFormat)
+                setInteger(KEY_BIT_RATE,width*height)
+                //帧率
+                setInteger(KEY_FRAME_RATE,framerate)
+                //关键帧间隔时间，单位为秒，此处的意思是这个视频每两秒一个关键帧
+                setInteger(KEY_I_FRAME_INTERVAL,frame_interval)
+            }
+                //创建编码器
+            var encoder:MediaCodec = MediaCodec.createEncoderByType(MIMETYPE_VIDEO_AVC)
+            //最后一个参数需要注意，标明配置的是编码器
+            encoder.configure(mediaFormat,null,null,MediaCodec.CONFIGURE_FLAG_ENCODE)
+            var mEncoderinputBuffers = encoder.getInputBuffers()
+
+            var inputbufferindex = encoder.dequeueInputBuffer(TIME_OUT_US)
+            var  dstBuf:ByteBuffer
+            if(inputbufferindex>0){
+                dstBuf = mEncoderinputBuffers[inputbufferindex]
+                dstBuf.clear()
+                dstBuf.limit(bytes.size)
+                dstBuf.put(bytes)
+                encoder.queueInputBuffer(inputbufferindex,0,bytes.size,0L,0)
+            }
+
+//            encoder.createInputSurface()
+
+
+
+
+
+
+
+
+//            AvcExecuteAsyncTask.execute(BitmapProvider())
+
+
+        }.start()
 //        MediaMuxer("/storage/emulated/0/mvresult.mp4",MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
 //        Log.e("ok","meata is ${meta.toString()}")
 
