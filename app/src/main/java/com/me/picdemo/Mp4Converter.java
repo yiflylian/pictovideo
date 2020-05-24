@@ -266,6 +266,10 @@ class Mp4Converter {
         }
 
     }
+
+    private void fail(String s) {
+    }
+
     //<editor-fold desc="获取视频文件参数">
     private void extractor(String source){
         mMediaExtractor = new MediaExtractor();

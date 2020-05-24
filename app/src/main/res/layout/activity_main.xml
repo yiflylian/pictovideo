@@ -42,61 +42,55 @@
             app:layout_constraintVertical_bias="0.07"
             app:srcCompat="@drawable/maskimage90" />
 
+        <!-- surface_view or texture_view -->
+
+
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="407dp"
-            android:layout_height="451dp"
+            android:layout_width="358dp"
+            android:layout_height="280dp"
             android:background="@android:color/white"
             android:scaleType="centerInside"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.363"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.06"
+            app:layout_constraintVertical_bias="0.0"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-        <!-- surface_view or texture_view -->
 
 
-        <jp.co.cyberagent.android.gpuimage.GPUImageView
-            android:id="@+id/gpuimageview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:gpuimage_show_loading="true"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.451"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3"
+            app:layout_constraintVertical_bias="0.032"
             app:lottie_autoPlay="true"
             app:lottie_fileName="data.json"
             app:lottie_loop="true" />
-<!--        android:onClick="@{data::createPics}"-->
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="168dp"
             android:layout_height="53dp"
-            android:gravity="center"
             android:background="@android:color/white"
-          android:onClick="getvideoinfo"
+            android:gravity="center"
+            android:onClick="getvideoinfo"
             android:text="@string/get_video_info"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.407"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.945" />
+            app:layout_constraintVertical_bias="0.886" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
