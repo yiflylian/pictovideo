@@ -89,8 +89,8 @@ class MainActivity : AppCompatActivity() {
     var  meta_mask_DURATION =0L
     var  meta_mask_FRAMERATE =0
     var  meta_mask_FRAME_COUNT =0
-    var w =720
-    var h =1280
+    var w =540
+    var h =960
     fun getvideoinfo(view: View){
 
 
@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
 
         var MIME_TYPE = "video/avc" // H.264 Advanced Video Coding
 
-//        video_format = MediaFormat.createVideoFormat(MIME_TYPE,w,h)
+        video_format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, w,h)
         video_format = video_format.apply{
 //      var header_sps = byteArrayOf(0, 0, 0, 1, 103, 100, 0, 31, -84, -76, 2, -128, 45, -56)
 //    var header_pps = byteArrayOf(0, 0, 0, 1, 104, -18, 60, 97, 15, -1, -16, -121, -1, -8, 67, -1, -4, 33, -1, -2, 16, -1, -1, 8, 127, -1, -64)
@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity() {
             lateinit  var b_result:Bitmap
             lateinit  var  outputbuffer:ByteBuffer
             lateinit var  inputdata:ByteArray
-            lateinit var  inputbuffer:ByteBuffer
+//            lateinit var  inputbuffer:ByteBuffer
             var postiontime:Long= 0L
             override fun onOutputBufferAvailable(
                 codec: MediaCodec,
@@ -231,11 +231,11 @@ class MainActivity : AppCompatActivity() {
             override fun onInputBufferAvailable(codec: MediaCodec, index: Int) {
                 Log.e("ok","onInputBufferAvailable")
                 Log.e("ok","第 ${Frameindex} 帧data")
-
+                var inputbuffer = codec.getInputBuffer(index)!!
 //                if(inputbuffer==null){
 //                    Log.e("ok","onInputBufferAvailable  inputbuffer is null")
 //                }
-                if(Frameindex<20){
+                if(Frameindex<op){
                     b_result= getmergbitmap(Frameindex)
                     if(b_result == null){
                         Log.e("ok","onInputBufferAvailable  b_result is null")
@@ -247,7 +247,7 @@ class MainActivity : AppCompatActivity() {
                         Log.e("ok","onInputBufferAvailable  inputdata.size is ${inputdata.size}")
 
                     }
-                    inputbuffer = codec.getInputBuffer(index)!!
+
                     inputbuffer.clear()
                     inputbuffer.put(inputdata)
 
@@ -256,16 +256,17 @@ class MainActivity : AppCompatActivity() {
                     codec.queueInputBuffer(index,0,inputdata.size,postiontime,0)
                     Frameindex++
                 }else{
-                    inputbuffer =codec.getInputBuffer(index)!!
+//                    inputbuffer =codec.getInputBuffer(index)!!
                     codec.queueInputBuffer(index,0,0,postiontime,  MediaCodec.BUFFER_FLAG_END_OF_STREAM)
                 }
 
 
               }
 
-            override fun onOutputFormatChanged(p0: MediaCodec, p1: MediaFormat) {
+            override fun onOutputFormatChanged(codec: MediaCodec, p1: MediaFormat) {
                 Log.e("ok","onOutputFormatChanged")
-                mTrackIndex = mediaMuxer.addTrack(video_format!!)
+                mTrackIndex = mediaMuxer.addTrack(p1)
+
                 mediaMuxer.start()
                }
 
