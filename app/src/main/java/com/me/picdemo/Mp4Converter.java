@@ -201,6 +201,8 @@ class Mp4Converter {
                             // returns, so we need to wait for the onFrameAvailable callback to
                             // fire.  If we don't wait, we risk rendering from the previous frame.
                             decoder.releaseOutputBuffer(decoderStatus, doRender);
+
+
                             if (doRender) { // This waits for the image and renders it after it arrives.
                                 if (VERBOSE) Log.d(TAG, "awaiting frame");
                                 outputSurface.awaitNewImage();
