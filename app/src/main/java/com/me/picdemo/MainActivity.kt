@@ -28,27 +28,28 @@ import java.nio.charset.Charset
 
 
 class MainActivity : AppCompatActivity() {
-    lateinit  var file:File
-    lateinit var  mediaCodec:MediaCodec
-    lateinit var  mediaMuxer:MediaMuxer
-     var  mFrameRate=15
-    var mTrackIndex =0
-    var mMuxerStarted =false
+    lateinit var file: File
+    lateinit var mediaCodec: MediaCodec
+    lateinit var mediaMuxer: MediaMuxer
+    var mFrameRate = 15
+    var mTrackIndex = 0
+    var mMuxerStarted = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var binding:ActivityMainBinding =DataBindingUtil.setContentView(this,R.layout.activity_main)
+        var binding: ActivityMainBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
         val viewModel = ViewModelProvider(this).get(PicViewModel::class.java).apply {
             setdestImageView(binding.imageView3)
         }
-        binding.lottie.apply{
-//            visibility = View.GONE
+        binding.lottie.apply {
+            //            visibility = View.GONE
 //            frame
-        }.imageAssetsFolder ="images"
+        }.imageAssetsFolder = "images"
 
         checkPermission(this)
 
 
-        binding.data=viewModel
+        binding.data = viewModel
         binding.setLifecycleOwner(this)
 
     }
@@ -79,72 +80,89 @@ class MainActivity : AppCompatActivity() {
     }
     // </editor-fold>
 
-   lateinit var mmr_color:FFmpegMediaMetadataRetriever
-   lateinit var mmr_mask:FFmpegMediaMetadataRetriever
-   lateinit var bitmap:GPUImage
+    //   lateinit var mmr_color:FFmpegMediaMetadataRetriever
+//   lateinit var mmr_mask:FFmpegMediaMetadataRetriever
+    lateinit var mmr_color: MediaMetadataRetriever
+    lateinit var mmr_mask: MediaMetadataRetriever
+    lateinit var bitmap: GPUImage
 
-    var  meta_color_DURATION =0L
-    var  meta_color_FRAMERATE =0
-    var  meta_color_FRAME_COUNT =0
-    var  meta_mask_DURATION =0L
-    var  meta_mask_FRAMERATE =0
-    var  meta_mask_FRAME_COUNT =0
-    var w =540
-    var h =960
-    fun getvideoinfo(view: View){
+    var meta_color_DURATION = 0L
+    var meta_color_FRAMERATE = 0
+    var meta_color_FRAME_COUNT = 0
+    var meta_mask_DURATION = 0L
+    var meta_mask_FRAMERATE = 0
+    var meta_mask_FRAME_COUNT = 0
+    var w = 540
+    var h = 960
+    fun getvideoinfo(view: View) {
 
-
-
-        mmr_color= FFmpegMediaMetadataRetriever()
+        val strat_time = System.currentTimeMillis()
+        Log.e("ok", "strat_time is ${strat_time}")
+//        mmr_color= FFmpegMediaMetadataRetriever()
+//        StartGetColorFrameTask("/storage/emulated/0/mvColor.mp4",150, ArrayList<Bitmap>())
+//        return
+        mmr_color = MediaMetadataRetriever()
         mmr_color.setDataSource("/storage/emulated/0/mvColor.mp4")
-         meta_color_DURATION =mmr_color.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
-          meta_color_FRAMERATE= mmr_color.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
-          meta_color_FRAME_COUNT =meta_color_FRAMERATE*(meta_color_DURATION.toFloat()/1000).toInt()
+//         meta_color_DURATION =mmr_color.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+//          meta_color_FRAMERATE= mmr_color.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
+
+        meta_color_DURATION =
+            mmr_color.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+
+        meta_color_FRAME_COUNT =(mmr_color.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT).toInt())
+
+        meta_color_FRAMERATE = meta_color_FRAME_COUNT / (meta_color_DURATION / 1000).toInt()
 
         mFrameRate = meta_color_FRAMERATE
-        Log.e("ok","meta_color_DURATION is ${meta_color_DURATION}")
-        Log.e("ok","meta_color_FRAMERATE is ${meta_color_FRAMERATE}")
-        Log.e("ok","meta_color_FRAME_COUNT is ${meta_color_FRAME_COUNT}")
+        Log.e("ok", "meta_color_DURATION is ${meta_color_DURATION}")
+        Log.e("ok", "meta_color_FRAMERATE is ${meta_color_FRAMERATE}")
+        Log.e("ok", "meta_color_FRAME_COUNT is ${meta_color_FRAME_COUNT}")
 
-         mmr_mask = FFmpegMediaMetadataRetriever()
+//         var mmr_mask = FFmpegMediaMetadataRetriever()
+        mmr_mask = MediaMetadataRetriever()
         mmr_mask.setDataSource("/storage/emulated/0/mvMask.mp4")
-         meta_mask_DURATION =mmr_mask.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
-          meta_mask_FRAMERATE= mmr_mask.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
-         meta_mask_FRAME_COUNT =meta_mask_FRAMERATE*(meta_mask_DURATION.toFloat()/1000).toInt()
+//         meta_mask_DURATION =mmr_mask.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+//          meta_mask_FRAMERATE= mmr_mask.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
 
-        Log.e("ok","meta_mak_DURATION is ${meta_mask_DURATION}")
-        Log.e("ok","meta_mask_FRAMERATE is ${meta_mask_FRAMERATE}")
-        Log.e("ok","meta_mak_FRAME_COUNT is ${meta_mask_FRAME_COUNT}")
+        meta_mask_DURATION =
+            mmr_mask.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+
+        meta_mask_FRAME_COUNT =
+            (mmr_mask.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT).toInt())
+        meta_mask_FRAMERATE = meta_mask_FRAME_COUNT / (meta_mask_DURATION / 1000).toInt()
+
+        Log.e("ok", "meta_mak_DURATION is ${meta_mask_DURATION}")
+        Log.e("ok", "meta_mask_FRAMERATE is ${meta_mask_FRAMERATE}")
+        Log.e("ok", "meta_mak_FRAME_COUNT is ${meta_mask_FRAME_COUNT}")
 
 
         bitmap = GPUImage(this)
-          var json_data= String(assets.open("data.json").readBytes(), Charset.defaultCharset())
+        var json_data = String(assets.open("data.json").readBytes(), Charset.defaultCharset())
 //        Log.e("ok","${json_data}")
-        var op =JSONObject(json_data).getInt("op")
-       var w= JSONObject(json_data).getInt("w")
-       var h= JSONObject(json_data).getInt("h")
-        Log.e("ok"," op  is  ${op}")
-        var video_format :MediaFormat?=null
-        var  mDecodeTrackIndex:Int =0
-        var mMimeType:String=""
-        var presentationTimeUs:Long =0
-         MediaExtractor().apply {
+        var op = JSONObject(json_data).getInt("op")
+        var w = JSONObject(json_data).getInt("w")
+        var h = JSONObject(json_data).getInt("h")
+//        Log.e("ok"," op  is  ${op}")
+        var video_format: MediaFormat? = null
+        var mDecodeTrackIndex: Int = 0
+        var mMimeType: String = ""
+        var presentationTimeUs: Long = 0
+        MediaExtractor().apply {
 
             try {
                 setDataSource("/storage/emulated/0/mvColor.mp4")
                 val trackCount: Int = getTrackCount()
-                Log.e("ok","trackCount is ${trackCount}")
-                presentationTimeUs =sampleTime
-                Log.e("ok","presentationTimeUs is ${presentationTimeUs}")
+//                Log.e("ok","trackCount is ${trackCount}")
+                presentationTimeUs = sampleTime
+//                Log.e("ok","presentationTimeUs is ${presentationTimeUs}")
                 for (i in 0 until trackCount) {
-                    val format: MediaFormat =getTrackFormat(i)
+                    val format: MediaFormat = getTrackFormat(i)
                     val mime = format.getString(MediaFormat.KEY_MIME)
 
                     if (mime.startsWith("video/")) {
                         video_format = format
                         mDecodeTrackIndex = i
                         mMimeType = mime
-
                         break
                     }
                 }
@@ -157,13 +175,16 @@ class MainActivity : AppCompatActivity() {
 
         var MIME_TYPE = "video/avc" // H.264 Advanced Video Coding
 
-        video_format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, w,h)
-        video_format = video_format.apply{
-//      var header_sps = byteArrayOf(0, 0, 0, 1, 103, 100, 0, 31, -84, -76, 2, -128, 45, -56)
+        video_format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, w, h)
+        video_format = video_format.apply {
+            //      var header_sps = byteArrayOf(0, 0, 0, 1, 103, 100, 0, 31, -84, -76, 2, -128, 45, -56)
 //    var header_pps = byteArrayOf(0, 0, 0, 1, 104, -18, 60, 97, 15, -1, -16, -121, -1, -8, 67, -1, -4, 33, -1, -2, 16, -1, -1, 8, 127, -1, -64)
 //  this?.setByteBuffer("csd-0", ByteBuffer.wrap(header_sps));
 //  this?.setByteBuffer("csd-1", ByteBuffer.wrap(header_pps));
-            this?.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar)
+            this?.setInteger(
+                MediaFormat.KEY_COLOR_FORMAT,
+                MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar
+            )
 //                MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar)
 
 //            this?.setInteger(MediaFormat.KEY_BIT_RATE, 1048576 * 3)
@@ -174,44 +195,45 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        mediaMuxer = MediaMuxer("/storage/emulated/0/result.mp4", MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
-         mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC);
+        mediaMuxer = MediaMuxer(
+            "/storage/emulated/0/result.mp4",
+            MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4
+        )
+        mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC);
 //         mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_MPEG4);
-            if(mediaCodec==null){
-                Log.e("ok","mediaCodec is  null")
-                return
-            }
+        if (mediaCodec == null) {
+//                Log.e("ok","mediaCodec is  null")
+            return
+        }
 
-
-        mediaCodec.setCallback(object : MediaCodec.Callback(){
-            var  Frameindex =0
-            var mTrackIndex =0
-            lateinit  var b_result:Bitmap
-            lateinit  var  outputbuffer:ByteBuffer
-            lateinit var  inputdata:ByteArray
-//            lateinit var  inputbuffer:ByteBuffer
-            var postiontime:Long= 0L
+        lateinit var b_result: Bitmap
+        lateinit var outputbuffer: ByteBuffer
+        lateinit var inputdata: ByteArray
+        mediaCodec.setCallback(object : MediaCodec.Callback() {
+            var Frameindex = 0
+            var mTrackIndex = 0
+            var postiontime: Long = 0L
             override fun onOutputBufferAvailable(
                 codec: MediaCodec,
                 index: Int,
                 info: MediaCodec.BufferInfo
             ) {
-                Log.e("ok","onOutputBufferAvailable")
-                  outputbuffer = codec.getOutputBuffer(index)!!
+//                Log.e("ok","onOutputBufferAvailable")
+                outputbuffer = codec.getOutputBuffer(index)!!
                 outputbuffer?.apply {
-                    if (info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0){
+                    if (info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0) {
                         // The codec config data was pulled out and fed to the muxer when we got
                         // the INFO_OUTPUT_FORMAT_CHANGED status.  Ignore it.
-                        Log.e("ok", "ignoring BUFFER_FLAG_CODEC_CONFIG")
+//                        Log.e("ok", "ignoring BUFFER_FLAG_CODEC_CONFIG")
                         info.size = 0
                     }
-                    if(info.size!=0) {
+                    if (info.size != 0) {
                         position(info.offset)
                         limit(info.offset + info.size)
                         mediaMuxer.writeSampleData(mTrackIndex, outputbuffer, info)
                     }
                     codec.releaseOutputBuffer(index, false)
-                    if( info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0){
+                    if (info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) {
                         if (codec != null) {
                             codec.stop()
                             codec.release()
@@ -219,6 +241,9 @@ class MainActivity : AppCompatActivity() {
                         if (mediaMuxer != null) {
                             mediaMuxer.stop()
                             mediaMuxer.release()
+                            val end_time = System.currentTimeMillis()
+                            Log.e("ok", "end_time is ${end_time}")
+                            Log.e("ok", "end_time is ${end_time -strat_time  }")
 //                            mediaMuxer = null
                         }
 
@@ -226,25 +251,30 @@ class MainActivity : AppCompatActivity() {
 
                 }
 
-               }
+            }
 
             override fun onInputBufferAvailable(codec: MediaCodec, index: Int) {
-                Log.e("ok","onInputBufferAvailable")
-                Log.e("ok","第 ${Frameindex} 帧data")
+//                Log.e("ok","onInputBufferAvailable")
+                Log.e("ok", "第 ${Frameindex} 帧data")
                 var inputbuffer = codec.getInputBuffer(index)!!
 //                if(inputbuffer==null){
 //                    Log.e("ok","onInputBufferAvailable  inputbuffer is null")
 //                }
-                if(Frameindex<op){
-                    b_result= getmergbitmap(Frameindex)
-                    if(b_result == null){
-                        Log.e("ok","onInputBufferAvailable  b_result is null")
+//                if (Frameindex < 1) {
+                if (Frameindex < op) {
+                    var getmergbitmap_time = System.currentTimeMillis()
+                    b_result = getmergbitmap(Frameindex)
+                    Log.e("ok","getmergbitmap_time  is ${System.currentTimeMillis() - getmergbitmap_time}")
+                    if (b_result == null) {
+//                        Log.e("ok","onInputBufferAvailable  b_result is null")
                     }
-                    inputdata =  getNV12(getSize(b_result.width),getSize(b_result.height),b_result)
-                    if(inputdata == null){
-                        Log.e("ok","onInputBufferAvailable  inputdata is null")
-                    }else{
-                        Log.e("ok","onInputBufferAvailable  inputdata.size is ${inputdata.size}")
+                    var getNV12_time = System.currentTimeMillis()
+                    inputdata = getNV12(getSize(b_result.width), getSize(b_result.height), b_result)
+                    Log.e("ok","getNV12_time  is ${System.currentTimeMillis() - getNV12_time}")
+                    if (inputdata == null) {
+//                        Log.e("ok","onInputBufferAvailable  inputdata is null")
+                    } else {
+//                        Log.e("ok","onInputBufferAvailable  inputdata.size is ${inputdata.size}")
 
                     }
 
@@ -252,30 +282,36 @@ class MainActivity : AppCompatActivity() {
                     inputbuffer.put(inputdata)
 
 
-                    postiontime = (Frameindex/meta_color_FRAMERATE.toFloat()*1000000L).toLong()
-                    codec.queueInputBuffer(index,0,inputdata.size,postiontime,0)
+                    postiontime = (Frameindex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong()
+                    codec.queueInputBuffer(index, 0, inputdata.size, postiontime, 0)
                     Frameindex++
-                }else{
+                } else {
 //                    inputbuffer =codec.getInputBuffer(index)!!
-                    codec.queueInputBuffer(index,0,0,postiontime,  MediaCodec.BUFFER_FLAG_END_OF_STREAM)
+                    codec.queueInputBuffer(
+                        index,
+                        0,
+                        0,
+                        postiontime,
+                        MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                    )
                 }
 
 
-              }
+            }
 
             override fun onOutputFormatChanged(codec: MediaCodec, p1: MediaFormat) {
-                Log.e("ok","onOutputFormatChanged")
+//                Log.e("ok","onOutputFormatChanged")
                 mTrackIndex = mediaMuxer.addTrack(p1)
 
                 mediaMuxer.start()
-               }
+            }
 
             override fun onError(p0: MediaCodec, p1: MediaCodec.CodecException) {
-                Log.e("ok","onError")
-                Log.e("ok","CodecException is ${p1}")
-                }
+//                Log.e("ok","onError")
+//                Log.e("ok","CodecException is ${p1}")
+            }
         })
-        mediaCodec.configure(video_format,null,null, MediaCodec.CONFIGURE_FLAG_ENCODE)
+        mediaCodec.configure(video_format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
         mediaCodec.start()
 
         return
@@ -289,158 +325,128 @@ class MainActivity : AppCompatActivity() {
 //        }
 
 
+    }
+
+//    <editor-fold desc ="获取color frames">
+    fun StartGetColorFrameTask (videopath:String,FrameCount: Int,destList:ArrayList<Bitmap>){
+       val start_time =  System.currentTimeMillis()
+       Log.e("ok","StartGetColorFrameTask  start_time is  ${start_time}")
+       destList.clear()
+       var postiontime:Long
+       var  colorframeitem :Bitmap
+        Thread{
+            mmr_color = MediaMetadataRetriever()
+            mmr_color.setDataSource("/storage/emulated/0/mvColor.mp4")
+//         meta_color_DURATION =mmr_color.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+//          meta_color_FRAMERATE= mmr_color.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
+
+            meta_color_DURATION = mmr_color.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+            var meta_color_FRAMERATE = meta_color_FRAME_COUNT.toFloat() / (meta_color_DURATION / 1000.0)
+            meta_color_FRAME_COUNT =(mmr_color.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT).toInt())
 
 
+
+            Log.e("ok", "meta_color_DURATION is ${meta_color_DURATION}")
+            Log.e("ok", "meta_color_FRAMERATE is ${meta_color_FRAMERATE}")
+            Log.e("ok", "meta_color_FRAME_COUNT is ${meta_color_FRAME_COUNT}")
+            for(Frameindex in 0 until 150){
+                Log.e("ok", "第 ${Frameindex}/${meta_color_FRAME_COUNT}帧")
+                postiontime = (Frameindex / meta_color_FRAMERATE * 1000000L).toLong()
+                Log.e("ok", "postiontime is  ${postiontime}")
+                colorframeitem =mmr_color.getFrameAtTime(postiontime, MediaMetadataRetriever.OPTION_CLOSEST)
+                destList.add(colorframeitem)
+                colorframeitem.recycle()
+            }
+            mmr_color.release()
+            Log.e("ok","StartGetColorFrameTask  time is  ${System.currentTimeMillis()-start_time}")
+            Log.e("ok","destList.size  time is  ${destList.size}")
+        }.start()
     }
-    fun getmergbitmap(Frameindex:Int):Bitmap{
-        return  getmergbitmap(Frameindex,false)
+    //</edit-fold>
+
+    fun getmergbitmap(Frameindex: Int): Bitmap {
+        return getmergbitmap(Frameindex, false)
     }
-            fun getmergbitmap(Frameindex:Int,saveable:Boolean):Bitmap{
-                lottie.frame =Frameindex
-                val  b_back =loadBitmapFromView(lottie,w,h)
-                var postiontime:Long= (Frameindex/meta_color_FRAMERATE.toFloat()*1000000L).toLong()
+
+    fun getmergbitmap(Frameindex: Int, saveable: Boolean): Bitmap {
+        Log.e("ok","Frameindex is $Frameindex")
+        lottie.frame = Frameindex
+        val b_back = loadBitmapFromView(lottie, w, h)
+        var postiontime: Long = (Frameindex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong()
                 Log.e("ok","postiontime is $postiontime")
-                var b_color =  mmr_color.getFrameAtTime(postiontime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
-                if(b_color == null){
+//                var b_color =  mmr_color.getFrameAtTime(postiontime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
+        var b_color = mmr_color.getFrameAtTime(postiontime, MediaMetadataRetriever.OPTION_CLOSEST)
+        if (b_color == null) {
                     Log.d("ok","b_color is  null")
-                    b_color =b_back
-                }
+            b_color = b_back
+        }
 
 
-                var b_mask =  mmr_mask.getFrameAtTime(postiontime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
-                if(b_mask == null){
+//        var b_mask =
+//            mmr_mask.getFrameAtTime(postiontime, FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
+        var b_mask =
+            mmr_mask.getFrameAtTime(postiontime, MediaMetadataRetriever.OPTION_CLOSEST)
+        if (b_mask == null) {
                     Log.d("ok","b_mask is  null")
-                    b_mask =b_back
-                }
-
-
-                bitmap.setImage(b_color)
-                var filter = GPUImageTwoInputFilter(PicViewModel.TEST_ALPHA_FRAGMENT_SHADER)
-                filter.bitmap =  b_mask
-                bitmap.setFilter(filter)
-                val result =bitmap.bitmapWithFilterApplied
-
-
-
-                bitmap.setImage(b_back)
-                var b_filter = GPUImageAlphaBlendFilter()
-                b_filter.bitmap =  result
-                bitmap.setFilter(b_filter)
-                val b_result =bitmap.bitmapWithFilterApplied
-
-                if(saveable){
-                    bitmap.saveToPictures(b_color,"reulst/color","color_${Frameindex}.jpg",GPUImage.OnPictureSavedListener {
-
-                        b_color.recycle()
-                    })
-                    bitmap.saveToPictures(b_mask,"reulst/mask","mask_${Frameindex}.jpg",GPUImage.OnPictureSavedListener {
-                        b_mask.recycle()
-                    })
-                    bitmap.saveToPictures(b_back,"reulst/lottie","lottie_${Frameindex}.jpg",GPUImage.OnPictureSavedListener {
-                        b_back.recycle()
-                    })
-                    bitmap.saveToPictures(b_result,"reulst/result","result_${Frameindex}.jpg",GPUImage.OnPictureSavedListener {
-                        b_result.recycle()
-                    })
-                }
-
-                return b_result
-            }
-
-         fun  startVideoCreateThread(){
-             Thread{
-
-             }.start()
-         }
-
-
-    private fun drainEncoder(
-        endOfStream: Boolean,
-        bufferInfo: MediaCodec.BufferInfo
-    ) {
-        val TIMEOUT_USEC = 10000
-        var buffers: Array<ByteBuffer?>? = null
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
-            buffers = mediaCodec.getOutputBuffers()
+            b_mask = b_back
         }
-        if (endOfStream) {
-            try {
-                mediaCodec.signalEndOfInputStream()
-            } catch (e: Exception) {
-            }
-        }
-        while (true) {
-            val encoderStatus: Int =
-                mediaCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_USEC.toLong())
-            if (encoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
-                if (!endOfStream) {
-                    break // out of while
-                } else {
-                    Log.e("ok", "no output available, spinning to await EOS")
-                }
-            } else if (encoderStatus == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
-                if (mMuxerStarted) {
-                    throw RuntimeException("format changed twice")
-                }
-                val mediaFormat: MediaFormat = mediaCodec.getOutputFormat()
-                mTrackIndex = mediaMuxer.addTrack(mediaFormat)
-                mediaMuxer.start()
-                mMuxerStarted = true
-            } else if (encoderStatus < 0) {
-                Log.e("ok",
-                    "unexpected result from encoder.dequeueOutputBuffer: $encoderStatus"
-                )
-            } else {
-                var outputBuffer: ByteBuffer? = null
-                outputBuffer = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
-                    buffers!![encoderStatus]
-                } else {
-                    mediaCodec.getOutputBuffer(encoderStatus)
-                }
-                if (outputBuffer == null) {
-                    throw RuntimeException(
-                        "encoderOutputBuffer "
-                                + encoderStatus + " was null"
-                    )
-                }
-                if (bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0) {
-                    Log.e("ok", "ignoring BUFFER_FLAG_CODEC_CONFIG")
-                    bufferInfo.size = 0
-                }
-                if (bufferInfo.size != 0) {
-                    if (!mMuxerStarted) {
-                        throw RuntimeException("muxer hasn't started")
-                    }
-                    // adjust the ByteBuffer values to match BufferInfo
-                    outputBuffer.position(bufferInfo.offset)
-                    outputBuffer.limit(bufferInfo.offset + bufferInfo.size)
-                    Log.e("ok", "BufferInfo: " + bufferInfo.offset + ","
-                                + bufferInfo.size + ","
-                                + bufferInfo.flags + ","
-                                + bufferInfo.presentationTimeUs
-                    )
-                    try {
 
-                        mediaMuxer.writeSampleData(mTrackIndex, outputBuffer, bufferInfo)
-                    } catch (e: Exception) {
-                        Log.e("ok", "Too many frames")
-                    }
-                }
-                mediaCodec.releaseOutputBuffer(encoderStatus, false)
-                if (bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) {
-                    if (!endOfStream) {
-                        Log.e("ok", "reached end of stream unexpectedly")
-                    } else {
-                        Log.e("ok", "end of stream reached")
-                        mediaMuxer.stop()
-                        mediaMuxer.release()
 
-                    }
-                    break // out of while
-                }
-            }
+        bitmap.setImage(b_color)
+        var filter = GPUImageTwoInputFilter(PicViewModel.TEST_ALPHA_FRAGMENT_SHADER)
+        filter.bitmap = b_mask
+        bitmap.setFilter(filter)
+        val result = bitmap.bitmapWithFilterApplied
+
+
+
+        bitmap.setImage(b_back)
+        var b_filter = GPUImageAlphaBlendFilter()
+        b_filter.bitmap = result
+        bitmap.setFilter(b_filter)
+        val b_result = bitmap.bitmapWithFilterApplied
+
+
+        if (saveable) {
+            bitmap.saveToPictures(
+                b_color,
+                "reulst/color",
+                "color_${Frameindex}.jpg",
+                GPUImage.OnPictureSavedListener {
+
+                    b_color.recycle()
+                })
+            bitmap.saveToPictures(
+                b_mask,
+                "reulst/mask",
+                "mask_${Frameindex}.jpg",
+                GPUImage.OnPictureSavedListener {
+                    b_mask.recycle()
+                })
+            bitmap.saveToPictures(
+                b_back,
+                "reulst/lottie",
+                "lottie_${Frameindex}.jpg",
+                GPUImage.OnPictureSavedListener {
+                    b_back.recycle()
+                })
+            bitmap.saveToPictures(
+                b_result,
+                "reulst/result",
+                "result_${Frameindex}.jpg",
+                GPUImage.OnPictureSavedListener {
+                    b_result.recycle()
+                })
         }
+        b_color.recycle()
+        b_mask.recycle()
+        b_back.recycle()
+        result.recycle()
+        return b_result
     }
+
+
+
 
 
     /**
@@ -454,8 +460,8 @@ class MainActivity : AppCompatActivity() {
         return size / 4 * 4
     }
 
-    private fun loadBitmapFromView(v: View,w:Int,h:Int): Bitmap {
-       var bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+    private fun loadBitmapFromView(v: View, w: Int, h: Int): Bitmap {
+        var bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         var c = Canvas(bmp)
         c.drawColor(Color.WHITE)
         /** 如果不设置canvas画布为白色，则生成透明  */
@@ -509,11 +515,12 @@ class MainActivity : AppCompatActivity() {
         )
         return yuv
     }
+
     /**
      * Returns the first codec capable of encoding the specified MIME type, or null if no
      * match was found.
      */
-     fun selectCodec(mimeType: String): MediaCodecInfo? {
+    fun selectCodec(mimeType: String): MediaCodecInfo? {
         val numCodecs = MediaCodecList.getCodecCount()
         for (i in 0 until numCodecs) {
             val codecInfo = MediaCodecList.getCodecInfoAt(i)
@@ -529,6 +536,7 @@ class MainActivity : AppCompatActivity() {
         }
         return null
     }
+
     private fun encodeYUV420SP(
         yuv420sp: ByteArray,
         argb: IntArray,
@@ -743,23 +751,19 @@ class MainActivity : AppCompatActivity() {
             i++
         }
         Log.e(
-           "ok",
+            "ok",
             "found" + codecInfo!!.name + "supporting" + " video/avc"
         )
         val capabilities = codecInfo.getCapabilitiesForType("video/avc")
         return capabilities.colorFormats
     }
 }
-fun  main(){
-    var meta_color_DURATION =  10000
+
+fun main() {
+    var meta_color_DURATION = 10000
     var meta_color_FRAME_COUNT = 150
-    var frameindex_masktime =0L
-   for (i in 0 until 151){
-       frameindex_masktime = (i.toFloat() /15*1000000L).toLong()
-       println("index / framrate"+frameindex_masktime)
-       frameindex_masktime =(meta_color_DURATION.toLong()*1000L/150.toLong()*i)
-       println( frameindex_masktime )
-       println("======")
-   }
+    var frameindex_masktime = 0L
+    println((meta_color_DURATION.shl(3)  ))
+    println((meta_color_DURATION.shr(2)  ))
 
 }
