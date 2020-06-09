@@ -12,37 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         tools:context=".MainActivity">
-
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="115dp"
-            android:layout_height="147dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.054"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.054"
-            app:srcCompat="@drawable/colorimage90" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="94dp"
-            android:layout_height="137dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.826"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.07"
-            app:srcCompat="@drawable/maskimage90" />
-
-        <!-- surface_view or texture_view -->
 
 
         <ImageView
@@ -54,25 +24,21 @@
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.698"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_bias="0.004"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
-
-
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="33dp"
+            android:layout_width="187dp"
+            android:layout_height="104dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.451"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3"
-            app:layout_constraintVertical_bias="0.032"
+            app:layout_constraintTop_toTopOf="@+id/imageView3"
+            app:layout_constraintVertical_bias="0.516"
             app:lottie_autoPlay="true"
             app:lottie_fileName="data.json"
             app:lottie_loop="true" />
@@ -83,7 +49,7 @@
             android:layout_height="53dp"
             android:background="@android:color/white"
             android:gravity="center"
-            android:onClick="getvideoinfo"
+            android:onClick="mergvideobyThread"
             android:text="@string/get_video_info"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"

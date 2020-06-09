@@ -1,6 +1,9 @@
 package com.me.picdemo
 
+import android.Manifest
 import android.R.attr.x
+import android.app.Activity
+import android.content.pm.PackageManager
 import android.graphics.*
 import android.util.Log
 import android.view.View
@@ -75,78 +78,33 @@ class PicViewModel : ViewModel() {
 //        }
     }
 
-    fun createPic(View: View) {
-
-        Log.e("ok", "createPic(View:View)")
-
-        var backBitmap = BitmapFactory.decodeResource(destImageView.resources, R.drawable.colorimage90)
-        var frontBitmap = BitmapFactory.decodeResource(destImageView.resources, R.drawable.maskimage90)
-        var width = frontBitmap.width
-        var height = frontBitmap.height
-        var frontBitmap_array = IntArray(width * height, { 0 })
-        var backBitmap_array = IntArray(width * height, { 0 })
-        var destBitmap_array = IntArray(width * height, { 0 })
-
-        backBitmap.getPixels(backBitmap_array, 0, width, 0, 0, width, height)
-        frontBitmap.getPixels(frontBitmap_array, 0, width, 0, 0, width, height)
-        var destBitmap02 = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val nlf = floatArrayOf(
-            0f,0f,0f,0f, 0f,
-            0f,0f,0f,0f,0f,
-            0f,0f,0f,0f,0f,
-            1f,0f,0f,0f,0f
-        )
 
 
-        var paint =Paint().apply {
-            setColorFilter(ColorMatrixColorFilter(ColorMatrix(nlf)))
-            setXfermode(PorterDuffXfermode(PorterDuff.Mode.DST_IN))
-        }
-
-        for (i in 0 until backBitmap_array.size - 1) {
-//            pixels.get(x) =
-//                pixels.get(x) and 0x00FFFFFF or (alpha.get(x) shl 8 and -0x1000000)
-            destBitmap_array[i] = backBitmap_array[i] and  0x00FFFFFF or (frontBitmap_array[i] shl 8 and -0x1000000)
-//            if (destBitmap_array[i]!= backBitmap_array[i]) {
-//                destBitmap_array[i] = Color.TRANSPARENT
-//            }
-
-        }
-
-        destBitmap02.setPixels(destBitmap_array, 0, width, 0, 0, width, height)
-//        var canvas = Canvas(destBitmap02)
-//        canvas.setDensity(Bitmap.DENSITY_NONE);
-//
-//        canvas.drawBitmap(destBitmap02,0F,0F,paint)
-
-            destImageView.setImageBitmap(destBitmap02)
-        mGPUImageView.setImage(destBitmap02)
-
-
-        mGPUImageView.filter=   GPUImageTwoInputFilter(TEST_ALPHA_FRAGMENT_SHADER)
-//        destImageView.setColorFilter(Color.GRAY)
-        Log.e("ok", "createPic(View:View)  end")
-
-
-
-        Log.e("ok", " filesDir.absolutePath  is ${destImageView.context.filesDir.absolutePath}")
-        val root_path =destImageView.context.filesDir.absolutePath
-        File(root_path,"result.png").apply{
-            if(exists()){
-                delete()
-                createNewFile()
+    //<editor-fold desc="权限检查">
+    fun checkPermission(context: Activity): Boolean? {
+        var isGranted = true
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                //如果没有写sd卡权限
+                isGranted = false
             }
-           var out = outputStream()
-          destBitmap02.compress(Bitmap.CompressFormat.PNG,90, out)
-            out.flush()
-            out.close()
+            if (context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                isGranted = false
+            }
+            Log.e("appconfig", "isGranted == $isGranted")
+            if (!isGranted) {
+                context.requestPermissions(
+                    arrayOf(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ),
+                    102
+                )
+            }
         }
-
-        return
-
-
+        return isGranted
     }
-
+    // </editor-fold>
     fun getColorBitmap()= BitmapFactory.decodeResource(destImageView.resources, R.drawable.colorimage90)
     fun getMaskBitmap()= BitmapFactory.decodeResource(destImageView.resources, R.drawable.maskimage90)
 
