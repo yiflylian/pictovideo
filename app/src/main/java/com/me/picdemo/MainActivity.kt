@@ -274,6 +274,8 @@ class MainActivity : AppCompatActivity() {
     /*****************************/
     var start_time:Long =0
     fun  mergvideobysetp(view: View){
+        view.isEnabled = false
+        view.setBackgroundColor(Color.GRAY)
         start_time = System.currentTimeMillis()
         Log.e("mergvideobysetp","started ")
         bitmap = GPUImage(this)
@@ -296,6 +298,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun writemp4() {
+        val starttime = System.currentTimeMillis()
         var finished =false
         Thread{
             var video_format: MediaFormat
@@ -359,28 +362,11 @@ class MainActivity : AppCompatActivity() {
                                    pictobytesfinish =true
                                  }
                             Frameindex++
-                            lottie_bitmap?.recycle()
-                            lottie_bitmap= null
 
-                            color_bitmap?.recycle()
-                            color_bitmap= null
-
-                            mask_bitmap?.recycle()
-                            mask_bitmap= null
-
-                            result?.recycle()
-                            result =null
-
-                            b_result?.recycle()
-                            b_result =null
 
                             minputdata =null
 
-                            getlottiebitmapable =true
-                            getcolorbitmapable =true
-                            getmaskbitmapable = true
 
-                            mergpicable = true
                             pictobytesable =true
 
                         } else {
@@ -461,6 +447,14 @@ class MainActivity : AppCompatActivity() {
 
             }
             Log.e("ok","end while")
+            Log.e("writemp4","耗时 ${System.currentTimeMillis()-starttime}")
+            runOnUiThread {
+                binding.textView?.apply {
+                    isEnabled = true
+                    setBackgroundColor(Color.WHITE)
+                }
+
+            }
 
 //
         }.start()
@@ -468,25 +462,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun pictobytes() {
+        val starttime = System.currentTimeMillis()
         var index=0
         Thread{
             while(index<op){
-
                 if(pictobytesable&&mergpicfinish){
                     pictobytesable=false
                     mergpicfinish=false
                     minputdata=  getNV12(w,h,b_result!!)
                     pictobytesfinish = true
-                    
+                    if(lottiebitmap_recycle_falg){
+                        lottiebitmap_recycle_falg =false
+                        lottie_bitmap?.recycle()
+                        lottie_bitmap=null
+                        getlottiebitmapable =true
+                    }
+                    b_result?.recycle()
+                    b_result = null
+                    mergpicable = true
+
+
                     Log.e("pictobytes"," 第${index}帧")
                     index++
                 }
             }
-
+            Log.e("pictobytes","耗时 ${System.currentTimeMillis()-starttime}")
         }.start()
     }
-
+        var lottiebitmap_recycle_falg =false
     private fun mergpic() {
+        val starttime = System.currentTimeMillis()
         var mergpicindex =0
         Thread{
             while (mergpicindex<op){
@@ -501,9 +506,12 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     if(color_bitmap==null){
+                        getcolorbitmapable =true
+
                         Log.e("mergpic"," 第${mergpicindex}帧 color_bitmap is null")
                     }
                     if(mask_bitmap==null){
+                        getmaskbitmapable = true
                         Log.e("mergpic"," 第${mergpicindex}帧 mask_bitmap is null")
                     }
 
@@ -516,15 +524,40 @@ class MainActivity : AppCompatActivity() {
                         if(result ==null){
                             Log.e("mergpic"," 第${mergpicindex}帧 result is null")
                         }
+//
 
+                        color_bitmap?.recycle()
+                        color_bitmap= null
+
+                        mask_bitmap?.recycle()
+                        mask_bitmap= null
+
+                        getcolorbitmapable =true
+                        getmaskbitmapable = true
+//
+//
+//                        b_result?.recycle()
+//                        b_result =null
                         bitmap.setImage(lottie_bitmap)
                         bitmap.setFilter(GPUImageAlphaBlendFilter().apply {
                             bitmap = result
                         })
                         b_result = bitmap.bitmapWithFilterApplied
+                        if(b_result==null){
+                            Log.e("mergpic"," 第${mergpicindex}帧 b_result is null")
+                        }else{
+
+                            lottie_bitmap?.recycle()
+                            lottie_bitmap= null
+                            getlottiebitmapable = true
+                            result?.recycle()
+                            result =null
+                        }
                     }else{
                         b_result =lottie_bitmap
+                        lottiebitmap_recycle_falg = true
                     }
+
 
                     Log.e("mergpic"," 第${mergpicindex}帧")
                     mergpicfinish = true //结束flag
@@ -537,52 +570,77 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
-
+            Log.e("mergpic","耗时 ${System.currentTimeMillis()-starttime}")
         }.start()
 
     }
 
     private fun getmaskbitmap() {
+       val starttime = System.currentTimeMillis()
         mmr_mask = FFmpegMediaMetadataRetriever().apply {
             setDataSource("/storage/emulated/0/mvMask.mp4")
             meta_mask_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
             meta_mask_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
             meta_mask_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
         }
+//        var mmr_mask  = MediaMetadataRetriever().apply {
+//            setDataSource("/storage/emulated/0/mvMask.mp4")
+//            meta_mask_DURATION = extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+//            meta_mask_FRAME_COUNT= extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT).toInt()
+//            meta_mask_FRAMERATE =   meta_mask_FRAME_COUNT/(meta_mask_DURATION/1000).toInt()
+//            Log.e("getmaskbitmap","meta_mask_FRAMERATE is $meta_mask_FRAMERATE")
+//        }
         var  maskframeIndex =0
         Thread{
-            while(maskframeIndex<meta_mask_FRAME_COUNT){
+            var oneframestarttime =0L
+            while(maskframeIndex<op){
                 if(getmaskbitmapable){
                     getmaskbitmapable= false
-                    mask_bitmap =mmr_mask.getFrameAtTime(((maskframeIndex.toFloat()/meta_mask_FRAMERATE)*1000000L).toLong())
-                    getmaskfinish =true
-                    Log.e("getmaskbitmap"," 第${maskframeIndex}帧")
+                    oneframestarttime = System.currentTimeMillis()
+                    mask_bitmap =mmr_mask.getFrameAtTime(((maskframeIndex.toFloat()/meta_mask_FRAMERATE)*1000000L).toLong(),FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
+//                    mask_bitmap =mmr_mask.getFrameAtTime(((maskframeIndex.toFloat()/meta_mask_FRAMERATE)*1000000L).toLong(),MediaMetadataRetriever.OPTION_CLOSEST)
 
+                    Log.e("getmaskbitmap"," 第${maskframeIndex}帧 耗时${System.currentTimeMillis()-oneframestarttime}")
+                    getmaskfinish =true
 //                    Thread.sleep(1000)
                     maskframeIndex++
                 }
             }
-
+            mmr_mask.release()
+            Log.e("getmaskbitmap","耗时 ${System.currentTimeMillis()-starttime}")
         }.start()
     }
 
     private fun getcolorbitmap() {
+        val starttime = System.currentTimeMillis()
         mmr_color = FFmpegMediaMetadataRetriever().apply {
             setDataSource("/storage/emulated/0/mvColor.mp4")
             meta_color_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
             meta_color_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
             meta_color_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
         }
+//        var  mmr_color =MediaMetadataRetriever().apply {
+//            setDataSource("/storage/emulated/0/mvColor.mp4")
+//            meta_color_DURATION =extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+////
+//            meta_color_FRAME_COUNT = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT).toInt()
+//            meta_color_FRAMERATE=   meta_color_FRAME_COUNT/(meta_color_DURATION/1000).toInt()
+//            Log.e("getcolorbitmap","meta_color_FRAMERATE is $meta_color_FRAMERATE")
+//            }
         var  colorframeIndex =0
         var postiontime =0L
         Thread{
-            while(colorframeIndex<meta_color_FRAME_COUNT){
+            var oneframestarttime =0L
+            while(colorframeIndex<op){
                 if(getcolorbitmapable){
                     getcolorbitmapable= false
-                    postiontime = (colorframeIndex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong()
-                    Log.e("getcolorbitmap "," 第${colorframeIndex}帧  postiontime is ${postiontime}")
-                    color_bitmap =mmr_color.getFrameAtTime(postiontime)
-
+                    oneframestarttime =  System.currentTimeMillis()
+//                    postiontime = (colorframeIndex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong()
+//                    Log.e("getcolorbitmap "," 第${colorframeIndex}帧  postiontime is ${postiontime}")
+//                    color_bitmap =mmr_color.getFrameAtTime(postiontime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
+                    color_bitmap =mmr_color.getFrameAtTime((colorframeIndex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong(),FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
+//                    color_bitmap =mmr_color.getFrameAtTime(postiontime,MediaMetadataRetriever.OPTION_CLOSEST)
+                    Log.e("getcolorbitmap"," 第${colorframeIndex}帧 耗时${System.currentTimeMillis()-oneframestarttime}")
 //                    Thread.sleep(1000)
                     if(color_bitmap==null){
                         Log.e("getcolorbitmap"," 第${colorframeIndex}帧 is  null")
@@ -604,11 +662,13 @@ class MainActivity : AppCompatActivity() {
                     colorframeIndex++
                 }
             }
-
+            mmr_color.release()
+            Log.e("getcolorbitmap","耗时 ${System.currentTimeMillis()-starttime}")
         }.start()
     }
 
     private fun getlottiebitmap() {
+        val starttime = System.currentTimeMillis()
         var lottieindex =0
         Thread{
             while(lottieindex<op){
@@ -624,6 +684,7 @@ class MainActivity : AppCompatActivity() {
 
                 }
             }
+            Log.e("getlottiebitmap","耗时 ${System.currentTimeMillis()-starttime}")
 
         }.start()
     }

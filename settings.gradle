@@ -1,2 +1,3 @@
+include ':picturetovideo'
 include ':app'
 rootProject.name = "PicDemo"

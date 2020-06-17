@@ -112,7 +112,9 @@ class Mp4Converter {
      */
     private static MediaCodecInfo selectCodec(String mimeType) {
         int numCodecs = MediaCodecList.getCodecCount();
+//        MediaCodecInfo[] numCodecs = (new MediaCodecList()).getCodecInfos();
         for (int i = 0; i < numCodecs; i++) {
+//        for (MediaCodecInfo codecInfo:numCodecs) {
             MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
             if (!codecInfo.isEncoder()) {
                 continue;
