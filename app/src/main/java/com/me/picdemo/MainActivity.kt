@@ -244,6 +244,390 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    var frameIndex =0
+    var op =0
+    /*****************************/
+    var getlottiebitmapable:Boolean = true
+    var getcolorbitmapable:Boolean = true
+    var getmaskbitmapable:Boolean = true
+    var mergpicable:Boolean = true
+    var pictobytesable:Boolean = true
+
+    /*****************************/
+
+    var lottie_bitmap:Bitmap?=null
+    var color_bitmap:Bitmap?=null
+    var mask_bitmap:Bitmap?=null
+    var  result:Bitmap?=null
+    var minputdata:ByteArray?=null
+    /*****************************/
+    var  getlottiefinish = false
+    var  getcolorfinish = false
+    var  getmaskfinish = false
+
+    var mergpicfinish =false
+    var  pictobytesfinish = false
+
+
+    var  mergcolorandmask =false
+
+    /*****************************/
+    var start_time:Long =0
+    fun  mergvideobysetp(view: View){
+        start_time = System.currentTimeMillis()
+        Log.e("mergvideobysetp","started ")
+        bitmap = GPUImage(this)
+        var json_data = String(assets.open("data.json").readBytes(), Charset.defaultCharset())
+        op = JSONObject(json_data).getInt("op")
+         w = JSONObject(json_data).getInt("w")
+         h = JSONObject(json_data).getInt("h")
+        getlottiebitmap()
+        getcolorbitmap()
+        getmaskbitmap()
+//
+        mergpic()
+//
+//
+        pictobytes()
+//
+        writemp4()
+
+
+    }
+
+    private fun writemp4() {
+        var finished =false
+        Thread{
+            var video_format: MediaFormat
+
+            video_format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, w, h)
+            video_format = video_format.apply {
+
+                this.setInteger(
+                    MediaFormat.KEY_COLOR_FORMAT,
+                    MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar
+                )
+                this.setInteger(MediaFormat.KEY_BIT_RATE, w * h)
+                this.setInteger(MediaFormat.KEY_FRAME_RATE, 15)
+                this.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1)
+            }
+
+
+
+            mediaMuxer = MediaMuxer(
+                "/storage/emulated/0/result.mp4",
+                MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4
+            )
+            mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC);
+            if (mediaCodec == null) {
+                Log.e("ok","mediaCodec is  null")
+                return@Thread
+            }
+
+            mediaCodec.configure(video_format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
+            mediaCodec.start()
+
+            val TIMEOUT_USEC = 10000L
+            var inputBufferId =0
+            var outputBufferId =0
+            var Frameindex =0
+            var writeframeindex =0
+            var info = MediaCodec.BufferInfo()
+            var inputbuffer:ByteBuffer? =null
+            var outputBuffer:ByteBuffer? =null
+            var bufferFormat:MediaFormat
+            while (!finished){
+
+                if(pictobytesfinish ){
+                    pictobytesfinish  =false
+
+                    inputBufferId = mediaCodec.dequeueInputBuffer(TIMEOUT_USEC)
+                    if (inputBufferId >= 0) {
+                         inputbuffer = mediaCodec.getInputBuffer(inputBufferId)
+                        if(inputbuffer ==null){
+                            Log.e("ok", "inputbuffer is null")
+                        }
+                        Log.e("ok", "第 ${Frameindex} 帧data")
+                        if (Frameindex < op) {
+                            var getmergbitmap_time = System.currentTimeMillis()
+                            inputbuffer?.clear()
+                            inputbuffer?.put(minputdata)
+                            postiontime = (Frameindex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong()
+                            mediaCodec.queueInputBuffer(inputBufferId, 0, minputdata!!.size, postiontime, 0)
+                            Log.e("onInputBufferAvailable"," put $Frameindex")
+                                 if(Frameindex ==(op-1)){
+                                   pictobytesfinish =true
+                                 }
+                            Frameindex++
+                            lottie_bitmap?.recycle()
+                            lottie_bitmap= null
+
+                            color_bitmap?.recycle()
+                            color_bitmap= null
+
+                            mask_bitmap?.recycle()
+                            mask_bitmap= null
+
+                            result?.recycle()
+                            result =null
+
+                            b_result?.recycle()
+                            b_result =null
+
+                            minputdata =null
+
+                            getlottiebitmapable =true
+                            getcolorbitmapable =true
+                            getmaskbitmapable = true
+
+                            mergpicable = true
+                            pictobytesable =true
+
+                        } else {
+//                            Log.e("onInputBufferAvailable"," end")
+//                            finished = true
+                            mediaCodec.queueInputBuffer(
+                                inputBufferId,
+                                0,
+                                0,
+                                postiontime,
+                                MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                            )
+                        }
+
+
+                    }
+
+
+
+                }
+
+                outputBufferId = mediaCodec.dequeueOutputBuffer(info,TIMEOUT_USEC);
+                if (outputBufferId >= 0) {
+                    outputBuffer = mediaCodec.getOutputBuffer(outputBufferId);
+                    bufferFormat = mediaCodec.getOutputFormat(outputBufferId); // option A
+
+                    outputBuffer?.apply {
+                        if (info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0) {
+                            // The codec config data was pulled out and fed to the muxer when we got
+                            // the INFO_OUTPUT_FORMAT_CHANGED status.  Ignore it.
+//                        Log.e("ok", "ignoring BUFFER_FLAG_CODEC_CONFIG")
+                            info.size = 0
+                        }
+                        if (info.size != 0) {
+                            position(info.offset)
+                            limit(info.offset + info.size)
+                            mediaMuxer.writeSampleData(mTrackIndex, outputBuffer, info)
+                        }
+                        mediaCodec.releaseOutputBuffer(outputBufferId, false)
+                        Log.e("ok","writeframeindex is  ${writeframeindex} info.flags ${info.flags}")
+                        writeframeindex++
+
+                        if ((info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM )!= 0) {
+                            finished = true
+                            if (mediaCodec != null) {
+                                mediaCodec.stop()
+                                mediaCodec.release()
+                            }
+                            if (mediaMuxer != null) {
+                                mediaMuxer.stop()
+                                mediaMuxer.release()
+                                val end_time = System.currentTimeMillis()
+                                Log.e("ok", "end_time is ${end_time}")
+
+                            Log.e("ok", "end_time is ${end_time - start_time  }")
+//                            mediaMuxer = null
+//                            view.isEnabled = true
+//                            view.setBackgroundColor(Color.WHITE)
+                            }
+
+                        }
+
+                    }
+
+                    // bufferFormat is identical to outputFormat
+                    // outputBuffer is ready to be processed or rendered.
+
+//                        mediaCodec.releaseOutputBuffer(outputBufferId, …);
+                } else if (outputBufferId == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
+                    // Subsequent data will conform to new format.
+                    // Can ignore if using getOutputFormat(outputBufferId)
+//                        outputFormat = mediaCodec.getOutputFormat(); // option B
+                    mTrackIndex = mediaMuxer.addTrack(mediaCodec.getOutputFormat())
+                    Log.e("onOutputFormatChanged","mTrackIndex is  $mTrackIndex")
+                    mediaMuxer.start()
+                }
+
+
+            }
+            Log.e("ok","end while")
+
+//
+        }.start()
+
+    }
+
+    private fun pictobytes() {
+        var index=0
+        Thread{
+            while(index<op){
+
+                if(pictobytesable&&mergpicfinish){
+                    pictobytesable=false
+                    mergpicfinish=false
+                    minputdata=  getNV12(w,h,b_result!!)
+                    pictobytesfinish = true
+                    
+                    Log.e("pictobytes"," 第${index}帧")
+                    index++
+                }
+            }
+
+        }.start()
+    }
+
+    private fun mergpic() {
+        var mergpicindex =0
+        Thread{
+            while (mergpicindex<op){
+                if(mergpicable&&getlottiefinish&&getcolorfinish&&getmaskfinish){
+                    mergpicable =false
+
+                    getlottiefinish= false
+                    getcolorfinish= false
+                    getmaskfinish= false
+                    if(lottie_bitmap==null){
+                        Log.e("mergpic"," 第${mergpicindex}帧 lottie_bitmap is null")
+                    }
+
+                    if(color_bitmap==null){
+                        Log.e("mergpic"," 第${mergpicindex}帧 color_bitmap is null")
+                    }
+                    if(mask_bitmap==null){
+                        Log.e("mergpic"," 第${mergpicindex}帧 mask_bitmap is null")
+                    }
+
+                    if(color_bitmap!=null&&mask_bitmap!=null){
+                        bitmap.setImage(color_bitmap)
+                        bitmap.setFilter(GPUImageTwoInputFilter(PicViewModel.TEST_ALPHA_FRAGMENT_SHADER).apply {
+                            bitmap = mask_bitmap
+                        })
+                        result = bitmap.bitmapWithFilterApplied
+                        if(result ==null){
+                            Log.e("mergpic"," 第${mergpicindex}帧 result is null")
+                        }
+
+                        bitmap.setImage(lottie_bitmap)
+                        bitmap.setFilter(GPUImageAlphaBlendFilter().apply {
+                            bitmap = result
+                        })
+                        b_result = bitmap.bitmapWithFilterApplied
+                    }else{
+                        b_result =lottie_bitmap
+                    }
+
+                    Log.e("mergpic"," 第${mergpicindex}帧")
+                    mergpicfinish = true //结束flag
+
+
+
+                    mergpicindex++
+
+
+                }
+
+            }
+
+        }.start()
+
+    }
+
+    private fun getmaskbitmap() {
+        mmr_mask = FFmpegMediaMetadataRetriever().apply {
+            setDataSource("/storage/emulated/0/mvMask.mp4")
+            meta_mask_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+            meta_mask_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
+            meta_mask_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
+        }
+        var  maskframeIndex =0
+        Thread{
+            while(maskframeIndex<meta_mask_FRAME_COUNT){
+                if(getmaskbitmapable){
+                    getmaskbitmapable= false
+                    mask_bitmap =mmr_mask.getFrameAtTime(((maskframeIndex.toFloat()/meta_mask_FRAMERATE)*1000000L).toLong())
+                    getmaskfinish =true
+                    Log.e("getmaskbitmap"," 第${maskframeIndex}帧")
+
+//                    Thread.sleep(1000)
+                    maskframeIndex++
+                }
+            }
+
+        }.start()
+    }
+
+    private fun getcolorbitmap() {
+        mmr_color = FFmpegMediaMetadataRetriever().apply {
+            setDataSource("/storage/emulated/0/mvColor.mp4")
+            meta_color_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+            meta_color_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
+            meta_color_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
+        }
+        var  colorframeIndex =0
+        var postiontime =0L
+        Thread{
+            while(colorframeIndex<meta_color_FRAME_COUNT){
+                if(getcolorbitmapable){
+                    getcolorbitmapable= false
+                    postiontime = (colorframeIndex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong()
+                    Log.e("getcolorbitmap "," 第${colorframeIndex}帧  postiontime is ${postiontime}")
+                    color_bitmap =mmr_color.getFrameAtTime(postiontime)
+
+//                    Thread.sleep(1000)
+                    if(color_bitmap==null){
+                        Log.e("getcolorbitmap"," 第${colorframeIndex}帧 is  null")
+                    }else{
+//                        Log.e("getcolorbitmap"," 第${colorframeIndex}帧 is  save")
+//                        bitmap.saveToPictures(
+//                            color_bitmap,
+//                            "reulst/color",
+//                            "color_${colorframeIndex}.jpg",
+//                            GPUImage.OnPictureSavedListener {
+//                                color_bitmap?.recycle()
+//                                color_bitmap =null
+//                                getcolorbitmapable = true
+//                            })
+                    }
+
+
+                    getcolorfinish =true
+                    colorframeIndex++
+                }
+            }
+
+        }.start()
+    }
+
+    private fun getlottiebitmap() {
+        var lottieindex =0
+        Thread{
+            while(lottieindex<op){
+                if(getlottiebitmapable){
+                    getlottiebitmapable= false
+                    binding.lottie.frame  = lottieindex
+                    lottie_bitmap =loadBitmapFromView(binding.lottie,getSize(w),getSize(h))
+                    Log.e("getlottiebitmap"," 第${lottieindex}帧")
+
+//                    Thread.sleep(1000)
+                    getlottiefinish =true
+                    lottieindex++
+
+                }
+            }
+
+        }.start()
+    }
+
     fun mergvideobyThread(view: View){
         view.isEnabled = false
         view.setBackgroundColor(Color.GRAY)
@@ -425,7 +809,7 @@ class MainActivity : AppCompatActivity() {
         var b_mask:Bitmap
         var index:Int=0
         Thread{
-           while (colorMaskMergList.size==op){
+           while (colorMaskMergList.size<op){
                index =colorMaskMergList.size
                if(index<lottie_frames.size){
                    if (color_frames_isnullindex.contains(index)&&mask_frames_isnullindex.contains(index)){ //color 、 mask  这帧都是null  这帧不做任何操作 添加大需要跳过的帧的index集合中
@@ -435,17 +819,30 @@ class MainActivity : AppCompatActivity() {
                    }else{
                        if(color_frames_isnullindex.contains(index)){
                            colorFrames.add(index,lottie_frames[index])
+                           color_frames_isnullindex.remove(index)
                        }
                        if(mask_frames_isnullindex.contains(index)){
                            maskFrames.add(index,lottie_frames[index])
+                           mask_frames_isnullindex.remove(index)
                        }
-                       mergBitmapColorMask.setImage(colorFrames[index])
-                       mergBitmapColorMask.setFilter( GPUImageTwoInputFilter(PicViewModel.TEST_ALPHA_FRAGMENT_SHADER).apply {
-                           bitmap =maskFrames[index]
-                       })
-                       colorMaskMergList.add(mergBitmapColorMask.bitmapWithFilterApplied)
+                       if(index<colorFrames.size && index < maskFrames.size){
+                           b_color = colorFrames[index]
+                           b_mask = maskFrames[index]
+                           mergBitmapColorMask.setImage(b_color)
+                           mergBitmapColorMask.setFilter( GPUImageTwoInputFilter(PicViewModel.TEST_ALPHA_FRAGMENT_SHADER).apply {
+                               bitmap =b_mask
+                           })
+                           b_result = mergBitmapColorMask.bitmapWithFilterApplied
+                           if(b_result ==null){
+                               Log.e("merg","b_result is  null")
+                           }else{
+                               colorMaskMergList.add(b_result)
+                           }
+
+                       }
+
                    }
-                   index++
+
                }
 
 
@@ -482,25 +879,21 @@ class MainActivity : AppCompatActivity() {
        FrameIsNullIndexList.clear()
        var postiontime:Long
        var  colorframeitem :Bitmap?=null
+        var mmr_color = FFmpegMediaMetadataRetriever().apply {
+            setDataSource(videopath)
+            meta_color_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+            meta_color_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
+            meta_color_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
+        }
         Thread{
-            var mmr_color = FFmpegMediaMetadataRetriever().apply {
-                setDataSource(videopath)
-                meta_color_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
-                meta_color_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
-                meta_color_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
-            }
-
-
-
-
 
             Log.e(videotag, "meta_color_DURATION is ${meta_color_DURATION}")
             Log.e(videotag, "meta_color_FRAMERATE is ${meta_color_FRAMERATE}")
             Log.e(videotag, "meta_color_FRAME_COUNT is ${meta_color_FRAME_COUNT}")
             for(Frameindex in 0 until FrameCount){
                 Log.e(videotag, "第 ${Frameindex}/${FrameCount}帧")
-//                postiontime = (Frameindex.toFloat() / meta_color_FRAMERATE * 1000000L).toLong()
-                postiontime = 132 + Frameindex.toLong() * 1000000 / meta_color_FRAMERATE
+                postiontime = (Frameindex.toFloat() / meta_color_FRAMERATE * 1000000L).toLong()
+//                postiontime = 132 + Frameindex.toLong() * 1000000 / meta_color_FRAMERATE
                 Log.e(videotag ,"postiontime is  ${postiontime}")
                 colorframeitem =mmr_color.getFrameAtTime(postiontime, MediaMetadataRetriever.OPTION_CLOSEST)
                 if(colorframeitem==null){
@@ -508,7 +901,7 @@ class MainActivity : AppCompatActivity() {
                     FrameIsNullIndexList.add(Frameindex)
                 }else{
                     destList.add(colorframeitem!!)
-                    colorframeitem!!.recycle()
+//                    colorframeitem!!.recycle()
                 }
 
             }
@@ -519,10 +912,6 @@ class MainActivity : AppCompatActivity() {
                 Log.e(videotag,"destList[0] is  null")
 
 
-            }else{
-                runOnUiThread{
-                    imageView3.setImageBitmap(destList[0])
-                }
             }
         }.start()
     }
@@ -534,14 +923,14 @@ class MainActivity : AppCompatActivity() {
     var  b_color:Bitmap?=null
     var  b_mask:Bitmap?=null
     var  b_back:Bitmap?=null
-    var  result:Bitmap?=null
+
     var  b_result:Bitmap?=null
     var postiontime: Long = 0L
 
     fun getmergbitmap(Frameindex: Int, saveable: Boolean): Bitmap {
         Log.e("ok","Frameindex is $Frameindex")
-        lottie.frame = Frameindex
-         b_back = loadBitmapFromView(lottie, w, h)
+        binding.lottie.frame = Frameindex
+         b_back = loadBitmapFromView(binding.lottie, w, h)
         postiontime = (Frameindex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong()
                 Log.e("ok","postiontime is $postiontime")
                  b_color =  mmr_color.getFrameAtTime(postiontime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
@@ -942,10 +1331,11 @@ fun main() {
     var meta_color_FRAME_COUNT = 150
     var frameindex_masktime = 0L
 
-    for(i in 0 until  150){
-        println(i.toFloat()/15*1000000)
-        println(132 + i.toLong() * 1000000 / 15)
-
-    }
+    println("flase ${false &&false}")
+//    for(i in 0 until  150){
+//        println(i.toFloat()/15*1000000)
+//        println(132 + i.toLong() * 1000000 / 15)
+//
+//    }
 
 }
