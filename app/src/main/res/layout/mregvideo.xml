@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp">
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie"
+        android:layout_width="187dp"
+        android:layout_height="104dp"
+        android:layout_marginLeft="-1000dp"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="data.json"
+        app:lottie_loop="true" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="107dp"
+        android:layout_gravity="center_horizontal"
+        android:background="#2196F3"
+        android:gravity="center"
+        android:text="开始"
+        android:onClick="createvideo"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="107dp"
+        android:layout_gravity="center_horizontal"
+        android:background="#2196F3"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:onClick="downloadzip"
+        android:text="开始下载"
+        android:textColor="#FFFFFF" />
+</LinearLayout>

@@ -34,6 +34,7 @@
             android:id="@+id/lottie"
             android:layout_width="187dp"
             android:layout_height="104dp"
+            android:layout_marginLeft="-1000dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,8 +50,8 @@
             android:layout_height="53dp"
             android:background="@android:color/white"
             android:gravity="center"
-            android:onClick="mergvideobysetp"
-            android:text="@string/get_video_info"
+            android:onClick="getvideoinfo"
+            android:text="mergvideo"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -58,5 +59,52 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.886" />
+
+        <TextView
+            android:layout_width="168dp"
+            android:layout_height="53dp"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:onClick="getvideoinfos"
+            android:text="getvideoinfo"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.46"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.78" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="168dp"
+            android:layout_height="53dp"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:onClick="mergvideobysetp"
+            android:text="mergvideobysetp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.682" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="224dp"
+            android:layout_height="220dp"
+            android:background="#4CAF50"
+            android:foregroundTint="#FFFFFF"
+            android:gravity="center"
+            android:onClick="getfrmaetimetest"
+            android:text="test"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.205" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

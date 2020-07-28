@@ -4,9 +4,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.media.*
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     var mFrameRate = 15
     var mTrackIndex = 0
     var mMuxerStarted = false
+//    /sdcard/DCIM/qutui360/1592530951663.mp4
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
          binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -65,6 +68,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var mask_frames_isnullindex: ArrayList<Int>
     lateinit var need_jump_frames_indexs: ArrayList<Int>
     lateinit var color_mask_merg_list: ArrayList<Bitmap>
+
     fun getvideoinfo(view: View) {
         view.isEnabled = false
         view.setBackgroundColor(Color.GRAY)
@@ -78,22 +82,19 @@ class MainActivity : AppCompatActivity() {
         var h = JSONObject(json_data).getInt("h")
 
 
-         mmr_color = FFmpegMediaMetadataRetriever().apply {
-            setDataSource("/storage/emulated/0/mvColor.mp4")
-            meta_color_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
-            meta_color_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
-            meta_color_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
-        }
-        mmr_mask = FFmpegMediaMetadataRetriever().apply {
-            setDataSource("/storage/emulated/0/mvMask.mp4")
-            meta_mask_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
-            meta_mask_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
-            meta_mask_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
-        }
-        var video_format: MediaFormat
-
-        video_format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, w, h)
-        video_format = video_format.apply {
+//         mmr_color = FFmpegMediaMetadataRetriever().apply {
+//            setDataSource("/storage/emulated/0/mvColor.mp4")
+//            meta_color_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+//            meta_color_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
+//            meta_color_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
+//        }
+//        mmr_mask = FFmpegMediaMetadataRetriever().apply {
+//            setDataSource("/storage/emulated/0/mvMask.mp4")
+//            meta_mask_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+//            meta_mask_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
+//            meta_mask_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
+//        }
+        var video_format= MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, w, h).apply {
             //      var header_sps = byteArrayOf(0, 0, 0, 1, 103, 100, 0, 31, -84, -76, 2, -128, 45, -56)
 //    var header_pps = byteArrayOf(0, 0, 0, 1, 104, -18, 60, 97, 15, -1, -16, -121, -1, -8, 67, -1, -4, 33, -1, -2, 16, -1, -1, 8, 127, -1, -64)
 //  this?.setByteBuffer("csd-0", ByteBuffer.wrap(header_sps));
@@ -122,7 +123,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        lateinit var b_result: Bitmap
+         var b_result: Bitmap? =null
         lateinit var outputbuffer: ByteBuffer
         lateinit var inputdata: ByteArray
         mediaCodec.setCallback(object : MediaCodec.Callback() {
@@ -183,15 +184,26 @@ class MainActivity : AppCompatActivity() {
                     var getmergbitmap_time = System.currentTimeMillis()
                     b_result = getmergbitmap(Frameindex)
                     Log.e("ok","getmergbitmap_time  is ${System.currentTimeMillis() - getmergbitmap_time}")
+                    var getNV12_time = System.currentTimeMillis()
                     if (b_result == null) {
                         Log.e("ok","onInputBufferAvailable  b_result is null")
+                    }else{
+
+                        
+//                        b_color?.recycle()
+//                        b_color =null
+//                        b_mask?.recycle()
+//                        b_mask =null
+//                        b_back?.recycle()
+//                        b_back =null
+//                        result?.recycle()
+//                        result= null
                     }
 //                    b_back?.recycle()
-//                    b_color?.recycle()
-//                    b_mask?.recycle()
+                   
 //                    b_result?.recycle()
-                    var getNV12_time = System.currentTimeMillis()
-                    inputdata = getNV12(getSize(b_result.width), getSize(b_result.height), b_result)
+                    inputdata = getNV12(getSize(b_result!!.width), getSize(b_result!!.height), b_result!!)
+                    
 //
                     Log.e("ok","getNV12_time  is ${System.currentTimeMillis() - getNV12_time}")
                     if (inputdata == null) {
@@ -285,7 +297,7 @@ class MainActivity : AppCompatActivity() {
          h = JSONObject(json_data).getInt("h")
         getlottiebitmap()
         getcolorbitmap()
-        getmaskbitmap()
+//        getmaskbitmap()
 //
         mergpic()
 //
@@ -370,7 +382,7 @@ class MainActivity : AppCompatActivity() {
                             pictobytesable =true
 
                         } else {
-//                            Log.e("onInputBufferAvailable"," end")
+                            Log.e("onInputBufferAvailable"," end")
 //                            finished = true
                             mediaCodec.queueInputBuffer(
                                 inputBufferId,
@@ -449,7 +461,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("ok","end while")
             Log.e("writemp4","耗时 ${System.currentTimeMillis()-starttime}")
             runOnUiThread {
-                binding.textView?.apply {
+                binding.textView1?.apply {
                     isEnabled = true
                     setBackgroundColor(Color.WHITE)
                 }
@@ -495,52 +507,54 @@ class MainActivity : AppCompatActivity() {
         var mergpicindex =0
         Thread{
             while (mergpicindex<op){
-                if(mergpicable&&getlottiefinish&&getcolorfinish&&getmaskfinish){
+                if(mergpicable&&getlottiefinish&&getcolorfinish){
+//                if(mergpicable&&getlottiefinish&&getcolorfinish&&getmaskfinish){
                     mergpicable =false
 
                     getlottiefinish= false
                     getcolorfinish= false
-                    getmaskfinish= false
+//                    getmaskfinish= false
                     if(lottie_bitmap==null){
                         Log.e("mergpic"," 第${mergpicindex}帧 lottie_bitmap is null")
                     }
-
+//
                     if(color_bitmap==null){
-                        getcolorbitmapable =true
+//                        getcolorbitmapable =true
 
                         Log.e("mergpic"," 第${mergpicindex}帧 color_bitmap is null")
                     }
-                    if(mask_bitmap==null){
-                        getmaskbitmapable = true
-                        Log.e("mergpic"," 第${mergpicindex}帧 mask_bitmap is null")
-                    }
-
-                    if(color_bitmap!=null&&mask_bitmap!=null){
-                        bitmap.setImage(color_bitmap)
-                        bitmap.setFilter(GPUImageTwoInputFilter(PicViewModel.TEST_ALPHA_FRAGMENT_SHADER).apply {
-                            bitmap = mask_bitmap
-                        })
-                        result = bitmap.bitmapWithFilterApplied
-                        if(result ==null){
-                            Log.e("mergpic"," 第${mergpicindex}帧 result is null")
-                        }
+//                    if(mask_bitmap==null){
+//                        getmaskbitmapable = true
+//                        Log.e("mergpic"," 第${mergpicindex}帧 mask_bitmap is null")
+//                    }
 //
-
-                        color_bitmap?.recycle()
-                        color_bitmap= null
-
-                        mask_bitmap?.recycle()
-                        mask_bitmap= null
-
-                        getcolorbitmapable =true
-                        getmaskbitmapable = true
+//                    if(color_bitmap!=null&&mask_bitmap!=null){
+                    if(color_bitmap!=null&&lottie_bitmap!=null){
+//                        bitmap.setImage(color_bitmap)
+//                        bitmap.setFilter(GPUImageTwoInputFilter(PicViewModel.TEST_ALPHA_FRAGMENT_SHADER).apply {
+//                            bitmap = mask_bitmap
+//                        })
+//                        result = bitmap.bitmapWithFilterApplied
+//                        if(result ==null){
+//                            Log.e("mergpic"," 第${mergpicindex}帧 result is null")
+//                        }
+////
+//
+//                        color_bitmap?.recycle()
+//                        color_bitmap= null
+//
+//                        mask_bitmap?.recycle()
+//                        mask_bitmap= null
+//
+//                        getcolorbitmapable =true
+//                        getmaskbitmapable = true
 //
 //
 //                        b_result?.recycle()
 //                        b_result =null
                         bitmap.setImage(lottie_bitmap)
                         bitmap.setFilter(GPUImageAlphaBlendFilter().apply {
-                            bitmap = result
+                            bitmap = color_bitmap
                         })
                         b_result = bitmap.bitmapWithFilterApplied
                         if(b_result==null){
@@ -550,6 +564,7 @@ class MainActivity : AppCompatActivity() {
                             lottie_bitmap?.recycle()
                             lottie_bitmap= null
                             getlottiebitmapable = true
+                            getcolorbitmapable =true
                             result?.recycle()
                             result =null
                         }
@@ -558,10 +573,11 @@ class MainActivity : AppCompatActivity() {
                         lottiebitmap_recycle_falg = true
                     }
 
-
+//                    b_result =lottie_bitmap
+//                    lottiebitmap_recycle_falg = true
                     Log.e("mergpic"," 第${mergpicindex}帧")
                     mergpicfinish = true //结束flag
-
+//                    pictobytesable =true
 
 
                     mergpicindex++
@@ -584,21 +600,24 @@ class MainActivity : AppCompatActivity() {
             meta_mask_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
         }
 //        var mmr_mask  = MediaMetadataRetriever().apply {
-//            setDataSource("/storage/emulated/0/mvMask.mp4")
+//            setDataSource(File("/storage/emulated/0/mvMask.mp4").absolutePath)
 //            meta_mask_DURATION = extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
 //            meta_mask_FRAME_COUNT= extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT).toInt()
 //            meta_mask_FRAMERATE =   meta_mask_FRAME_COUNT/(meta_mask_DURATION/1000).toInt()
 //            Log.e("getmaskbitmap","meta_mask_FRAMERATE is $meta_mask_FRAMERATE")
 //        }
         var  maskframeIndex =0
+        var  postiontime =0L
         Thread{
             var oneframestarttime =0L
             while(maskframeIndex<op){
                 if(getmaskbitmapable){
                     getmaskbitmapable= false
+                    postiontime = (maskframeIndex / meta_mask_FRAMERATE.toFloat() * 1000000L).toLong()
                     oneframestarttime = System.currentTimeMillis()
-                    mask_bitmap =mmr_mask.getFrameAtTime(((maskframeIndex.toFloat()/meta_mask_FRAMERATE)*1000000L).toLong(),FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
+                    mask_bitmap =mmr_mask.getFrameAtTime(postiontime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
 //                    mask_bitmap =mmr_mask.getFrameAtTime(((maskframeIndex.toFloat()/meta_mask_FRAMERATE)*1000000L).toLong(),MediaMetadataRetriever.OPTION_CLOSEST)
+//                    mask_bitmap =mmr_mask.getFrameAtTime(((maskframeIndex.toFloat()/15)*1000000L).toLong(),MediaMetadataRetriever.OPTION_CLOSEST)
 
                     Log.e("getmaskbitmap"," 第${maskframeIndex}帧 耗时${System.currentTimeMillis()-oneframestarttime}")
                     getmaskfinish =true
@@ -620,7 +639,7 @@ class MainActivity : AppCompatActivity() {
             meta_color_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
         }
 //        var  mmr_color =MediaMetadataRetriever().apply {
-//            setDataSource("/storage/emulated/0/mvColor.mp4")
+//            setDataSource(File("/storage/emulated/0/mvColor.mp4").absolutePath)
 //            meta_color_DURATION =extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
 ////
 //            meta_color_FRAME_COUNT = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT).toInt()
@@ -635,10 +654,10 @@ class MainActivity : AppCompatActivity() {
                 if(getcolorbitmapable){
                     getcolorbitmapable= false
                     oneframestarttime =  System.currentTimeMillis()
-//                    postiontime = (colorframeIndex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong()
+                    postiontime = (colorframeIndex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong()
 //                    Log.e("getcolorbitmap "," 第${colorframeIndex}帧  postiontime is ${postiontime}")
-//                    color_bitmap =mmr_color.getFrameAtTime(postiontime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
-                    color_bitmap =mmr_color.getFrameAtTime((colorframeIndex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong(),FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
+                    color_bitmap =mmr_color.getFrameAtTime(postiontime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
+//                    color_bitmap =mmr_color.getFrameAtTime((colorframeIndex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong(),FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
 //                    color_bitmap =mmr_color.getFrameAtTime(postiontime,MediaMetadataRetriever.OPTION_CLOSEST)
                     Log.e("getcolorbitmap"," 第${colorframeIndex}帧 耗时${System.currentTimeMillis()-oneframestarttime}")
 //                    Thread.sleep(1000)
@@ -987,6 +1006,7 @@ class MainActivity : AppCompatActivity() {
 
     var  b_result:Bitmap?=null
     var postiontime: Long = 0L
+    var getcolorFrametime =0L
 
     fun getmergbitmap(Frameindex: Int, saveable: Boolean): Bitmap {
         Log.e("ok","Frameindex is $Frameindex")
@@ -994,45 +1014,73 @@ class MainActivity : AppCompatActivity() {
          b_back = loadBitmapFromView(binding.lottie, w, h)
         postiontime = (Frameindex / meta_color_FRAMERATE.toFloat() * 1000000L).toLong()
                 Log.e("ok","postiontime is $postiontime")
-                 b_color =  mmr_color.getFrameAtTime(postiontime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
-//        if(colorframes_isnullindex.contains(Frameindex)){
-//            colorframes.add(Frameindex,b_back)
-//            colorframes_isnullindex.remove(Frameindex)
-//        }
-//        if(colorframes_isnullindex.contains(Frameindex)){
-//            colorframes.add(Frameindex,b_back)
-//            colorframes_isnullindex.remove(Frameindex)
-//        }
-//        var b_color = colorframes[Frameindex]
-        if (b_color == null) {
-//                    Log.d("ok","b_color is  null")
-            b_color = b_back
+
+        mmr_color = FFmpegMediaMetadataRetriever().apply {
+            setDataSource("/storage/emulated/0/mvColor.mp4")
+            meta_color_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+            meta_color_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
+            meta_color_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
+        }
+
+        mmr_mask = FFmpegMediaMetadataRetriever().apply {
+            setDataSource("/storage/emulated/0/mvMask.mp4")
+            meta_mask_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+            meta_mask_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
+            meta_mask_FRAME_COUNT = (meta_color_DURATION /1000 * meta_color_FRAMERATE).toInt()
         }
 
 
+        getcolorFrametime = System.currentTimeMillis()
+        b_color =  mmr_color.getFrameAtTime(postiontime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST)
+        Log.e("ok","b_color time is ${System.currentTimeMillis()-getcolorFrametime}")
+        mmr_color.release()
+        if (b_color == null) {
+                    Log.d("ok","b_color is  null")
+//            b_color = b_back
+        }
 
+
+        getcolorFrametime = System.currentTimeMillis()
          b_mask =
             mmr_mask.getFrameAtTime(postiontime, MediaMetadataRetriever.OPTION_CLOSEST)
+        Log.e("ok","b_mask time is ${System.currentTimeMillis()-getcolorFrametime}")
+        mmr_mask.release()
         if (b_mask == null) {
-                    Log.d("ok","b_mask is  null")
-            b_mask = b_back
+                    Log.e("ok","b_mask is  null")
+//            b_mask = b_back
         }
 
 
-        bitmap.setImage(b_color)
+        if(b_mask!=null&&b_color!=null){
+            bitmap.setImage(b_color)
 
-        var  filter = GPUImageTwoInputFilter(PicViewModel.TEST_ALPHA_FRAGMENT_SHADER)
-        filter.bitmap = b_mask
-        bitmap.setFilter(filter)
-         result = bitmap.bitmapWithFilterApplied
+            var  filter = GPUImageTwoInputFilter(PicViewModel.TEST_ALPHA_FRAGMENT_SHADER)
+            filter.bitmap = b_mask
+            bitmap.setFilter(filter)
+            result = bitmap.bitmapWithFilterApplied
 
+            bitmap.setImage(b_back)
+            var b_filter = GPUImageAlphaBlendFilter()
+            b_filter.bitmap = result
+            bitmap.setFilter(b_filter)
+            b_result = bitmap.bitmapWithFilterApplied
 
+            b_mask?.recycle()
+            b_mask= null
+            b_color?.recycle()
+            b_mask= null
+            result?.recycle()
+            result= null
+            b_back?.recycle()
+            b_back= null
+        }else{
+            b_result = b_back
+            b_mask?.recycle()
+            b_mask= null
+            b_color?.recycle()
+            b_mask= null
+        }
 
-        bitmap.setImage(b_back)
-        var b_filter = GPUImageAlphaBlendFilter()
-        b_filter.bitmap = result
-        bitmap.setFilter(b_filter)
-         b_result = bitmap.bitmapWithFilterApplied
 
 
         if (saveable) {
@@ -1084,30 +1132,121 @@ class MainActivity : AppCompatActivity() {
         return 132 + frameIndex * 1000000 / mFrameRate
     }
 
-    private fun getSize(size: Int): Int {
-        return size / 4 * 4
+
+
+
+
+    var alltime=0L
+    @RequiresApi(Build.VERSION_CODES.P)
+    fun getfrmaetimetest(view: View) {
+        var index =147
+
+//        Frameindex is 147
+//        2020-06-18 13:42:02.017 21197-21197/com.me.picdemo E/ok: postiontime is 9800000
+//        2020-06-18 13:42:04.786 21197-21197/com.me.picdemo E/ok: b_color time is 2769
+//        2020-06-18 13:42:05.173 21197-21197/com.me.picdemo E/ok: b_mask time is 387
+//        2020-06-18 13:42:05.248 21197-21197/com.me.picdemo E/ok: getmergbitmap_time  is 3237
+//        2020-06-18 13:42:05.273 21197-21197/com.me.picdemo E/ok: getNV12_time  is 24
+
+
+            for (i in 0 until 150){
+                getframtest(i)
+            }
+
+
+
+
     }
-//    <editor-fold desc ="获取view图片">
-    private fun loadBitmapFromView(v: View, w: Int, h: Int): Bitmap {
-        var bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-        var c = Canvas(bmp)
-        c.drawColor(Color.WHITE)
-        /** 如果不设置canvas画布为白色，则生成透明  */
-        v.layout(0, 0, w, h)
-        v.draw(c)
-//        imageView3.setImageBitmap(bmp)
-        return bmp
+
+    fun getframtest(index: Int) {
+        postiontime =(index/15.toFloat() * 1000000L).toLong()
+        Log.e("postiontime"," index $index postiontime is $postiontime ")
+
+
+        alltime = System.currentTimeMillis()
+        var fr =FFmpegMediaMetadataRetriever().apply {
+//            setDataSource("/storage/emulated/0/mvColor.mp4")
+            setDataSource("/storage/emulated/0/mvMask.mp4")
+            meta_color_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+            Log.e("fr","meta_color_DURATION is $meta_color_DURATION")
+            meta_color_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
+            Log.e("fr","meta_color_FRAMERATE is $meta_color_FRAMERATE")
+            meta_color_FRAME_COUNT = (meta_color_DURATION * meta_color_FRAMERATE/1000).toInt()
+
+            Log.e("fr","meta_color_FRAME_COUNT is $meta_color_FRAME_COUNT")
+        }
+        start_time = System.currentTimeMillis()
+        fr.getFrameAtTime(postiontime,FFmpegMediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+        Log.e("fr","time is ${System.currentTimeMillis()-start_time}")
+
+        fr.release()
+        Log.e("fr","alltime is ${System.currentTimeMillis()-alltime}")
+
+
+        alltime = System.currentTimeMillis()
+        var  mmr_color =MediaMetadataRetriever().apply {
+//            setDataSource("/storage/emulated/0/mvColor.mp4")
+            setDataSource("/storage/emulated/0/mvMask.mp4")
+            meta_color_DURATION =extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+            Log.e("android","meta_color_DURATION is $meta_color_DURATION")
+            meta_color_FRAME_COUNT = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT).toInt()
+            Log.e("android","meta_color_FRAME_COUNT is $meta_color_FRAME_COUNT")
+            meta_color_FRAMERATE=   meta_color_FRAME_COUNT/(meta_color_DURATION/1000).toInt()
+            Log.e("android","meta_color_FRAMERATE is $meta_color_FRAMERATE")
+        }
+        start_time = System.currentTimeMillis()
+        mmr_color.getFrameAtTime(postiontime,MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+        Log.e("android","time is ${System.currentTimeMillis()-start_time}")
+//        start_time = System.currentTimeMillis()
+//        mmr_color.getFrameAtIndex(147)
+//        Log.e("android"," Index time is ${System.currentTimeMillis()-start_time}")
+        mmr_color.release()
+        Log.e("android","alltime is ${System.currentTimeMillis()-alltime}")
     }
-    //</editor-fold>
-    private fun getNV12(
-        inputWidth: Int,
-        inputHeight: Int,
-        scaled: Bitmap
-    ): ByteArray { // Reference (Variation) : https://gist.github.com/wobbals/5725412
-        val argb = IntArray(inputWidth * inputHeight)
-        //Log.i(TAG, "scaled : " + scaled);
-        scaled.getPixels(argb, 0, inputWidth, 0, 0, inputWidth, inputHeight)
-        val yuv = ByteArray(inputWidth * inputHeight * 3 / 2)
+
+    fun getvideoinfos(view: View) {
+
+        var fr =FFmpegMediaMetadataRetriever().apply {
+//            setDataSource("/storage/emulated/0/mvColor.mp4")
+            setDataSource("/sdcard/DCIM/qutui360/1592530951663.mp4")
+            meta_color_DURATION =extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+            Log.e("fr","meta_color_DURATION is $meta_color_DURATION")
+            meta_color_FRAMERATE= extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_FRAMERATE).toInt()
+            Log.e("fr","meta_color_FRAMERATE is $meta_color_FRAMERATE")
+            meta_color_FRAME_COUNT = (meta_color_DURATION * meta_color_FRAMERATE/1000).toInt()
+
+            Log.e("fr","meta_color_FRAME_COUNT is $meta_color_FRAME_COUNT")
+        }
+
+    }
+}
+
+fun main() {
+    var meta_color_DURATION = 10000
+    var meta_color_FRAME_COUNT = 150
+    var frameindex_masktime = 0L
+
+    println("flase ${false &&false}")
+//    for(i in 0 until  150){
+//        println(i.toFloat()/15*1000000)
+//        println(132 + i.toLong() * 1000000 / 15)
+//
+//    }
+
+}
+ fun getSize(size: Int): Int {
+    return size / 4 * 4
+}
+
+ fun getNV12(
+    inputWidth: Int,
+    inputHeight: Int,
+    scaled: Bitmap
+): ByteArray { // Reference (Variation) : https://gist.github.com/wobbals/5725412
+    val argb = IntArray(inputWidth * inputHeight)
+    //Log.i(TAG, "scaled : " + scaled);
+    scaled.getPixels(argb, 0, inputWidth, 0, 0, inputWidth, inputHeight)
+    val yuv = ByteArray(inputWidth * inputHeight * 3 / 2)
 //        when (colorFormat) {
 //            MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar -> encodeYUV420SP(
 //                yuv,
@@ -1134,269 +1273,266 @@ class MainActivity : AppCompatActivity() {
 //                inputHeight
 //            )
 //        }
-        //        scaled.recycle();
-        encodeYUV420SP(
-            yuv,
-            argb,
-            inputWidth,
-            inputHeight
-        )
-        return yuv
-    }
+    //        scaled.recycle();
+    encodeYUV420SP(
+        yuv,
+        argb,
+        inputWidth,
+        inputHeight
+    )
+    return yuv
+}
 
-    /**
-     * Returns the first codec capable of encoding the specified MIME type, or null if no
-     * match was found.
-     */
-    fun selectCodec(mimeType: String): MediaCodecInfo? {
-        val numCodecs = MediaCodecList.getCodecCount()
-        for (i in 0 until numCodecs) {
-            val codecInfo = MediaCodecList.getCodecInfoAt(i)
-            if (!codecInfo.isEncoder) {
-                continue
-            }
-            val types = codecInfo.supportedTypes
-            for (j in types.indices) {
-                if (types[j].equals(mimeType, ignoreCase = true)) {
-                    return codecInfo
-                }
+/**
+ * Returns the first codec capable of encoding the specified MIME type, or null if no
+ * match was found.
+ */
+fun selectCodec(mimeType: String): MediaCodecInfo? {
+    val numCodecs = MediaCodecList.getCodecCount()
+    for (i in 0 until numCodecs) {
+        val codecInfo = MediaCodecList.getCodecInfoAt(i)
+        if (!codecInfo.isEncoder) {
+            continue
+        }
+        val types = codecInfo.supportedTypes
+        for (j in types.indices) {
+            if (types[j].equals(mimeType, ignoreCase = true)) {
+                return codecInfo
             }
         }
-        return null
     }
+    return null
+}
 
-    private fun encodeYUV420SP(
-        yuv420sp: ByteArray,
-        argb: IntArray,
-        width: Int,
-        height: Int
-    ) {
-        val frameSize = width * height
-        var yIndex = 0
-        var uvIndex = frameSize
-        var a: Int
-        var R: Int
-        var G: Int
-        var B: Int
-        var Y: Int
-        var U: Int
-        var V: Int
-        var index = 0
-        for (j in 0 until height) {
-            for (i in 0 until width) {
-                a = argb[index] and -0x1000000 shr 24 // a is not used obviously
-                R = argb[index] and 0xff0000 shr 16
-                G = argb[index] and 0xff00 shr 8
-                B = argb[index] and 0xff shr 0
-                //                R = (argb[index] & 0xff000000) >>> 24;
+ fun encodeYUV420SP(
+    yuv420sp: ByteArray,
+    argb: IntArray,
+    width: Int,
+    height: Int
+) {
+    val frameSize = width * height
+    var yIndex = 0
+    var uvIndex = frameSize
+    var a: Int
+    var R: Int
+    var G: Int
+    var B: Int
+    var Y: Int
+    var U: Int
+    var V: Int
+    var index = 0
+    for (j in 0 until height) {
+        for (i in 0 until width) {
+            a = argb[index] and -0x1000000 shr 24 // a is not used obviously
+            R = argb[index] and 0xff0000 shr 16
+            G = argb[index] and 0xff00 shr 8
+            B = argb[index] and 0xff shr 0
+            //                R = (argb[index] & 0xff000000) >>> 24;
 //                G = (argb[index] & 0xff0000) >> 16;
 //                B = (argb[index] & 0xff00) >> 8;
 // well known RGB to YUV algorithm
-                Y = (66 * R + 129 * G + 25 * B + 128 shr 8) + 16
-                V = (-38 * R - 74 * G + 112 * B + 128 shr 8) + 128 // Previously U
-                U = (112 * R - 94 * G - 18 * B + 128 shr 8) + 128 // Previously V
+            Y = (66 * R + 129 * G + 25 * B + 128 shr 8) + 16
+            V = (-38 * R - 74 * G + 112 * B + 128 shr 8) + 128 // Previously U
+            U = (112 * R - 94 * G - 18 * B + 128 shr 8) + 128 // Previously V
+            yuv420sp[yIndex++] =
+                (if (Y < 0) 0 else if (Y > 255) 255 else Y).toByte()
+            if (j % 2 == 0 && index % 2 == 0) {
+                yuv420sp[uvIndex++] =
+                    (if (V < 0) 0 else if (V > 255) 255 else V).toByte()
+                yuv420sp[uvIndex++] =
+                    (if (U < 0) 0 else if (U > 255) 255 else U).toByte()
+            }
+            index++
+        }
+    }
+}
+
+ fun encodeYUV420P(
+    yuv420sp: ByteArray,
+    argb: IntArray,
+    width: Int,
+    height: Int
+) {
+    val frameSize = width * height
+    var yIndex = 0
+    var uIndex = frameSize
+    var vIndex = frameSize + width * height / 4
+    var a: Int
+    var R: Int
+    var G: Int
+    var B: Int
+    var Y: Int
+    var U: Int
+    var V: Int
+    var index = 0
+    for (j in 0 until height) {
+        for (i in 0 until width) {
+            a = argb[index] and -0x1000000 shr 24 // a is not used obviously
+            R = argb[index] and 0xff0000 shr 16
+            G = argb[index] and 0xff00 shr 8
+            B = argb[index] and 0xff shr 0
+            //                R = (argb[index] & 0xff000000) >>> 24;
+//                G = (argb[index] & 0xff0000) >> 16;
+//                B = (argb[index] & 0xff00) >> 8;
+// well known RGB to YUV algorithm
+            Y = (66 * R + 129 * G + 25 * B + 128 shr 8) + 16
+            V = (-38 * R - 74 * G + 112 * B + 128 shr 8) + 128 // Previously U
+            U = (112 * R - 94 * G - 18 * B + 128 shr 8) + 128 // Previously V
+            yuv420sp[yIndex++] =
+                (if (Y < 0) 0 else if (Y > 255) 255 else Y).toByte()
+            if (j % 2 == 0 && index % 2 == 0) {
+                yuv420sp[vIndex++] =
+                    (if (U < 0) 0 else if (U > 255) 255 else U).toByte()
+                yuv420sp[uIndex++] =
+                    (if (V < 0) 0 else if (V > 255) 255 else V).toByte()
+            }
+            index++
+        }
+    }
+}
+
+ fun encodeYUV420PSP(
+    yuv420sp: ByteArray,
+    argb: IntArray,
+    width: Int,
+    height: Int
+) {
+    val frameSize = width * height
+    var yIndex = 0
+    //        int uvIndex = frameSize;
+    var a: Int
+    var R: Int
+    var G: Int
+    var B: Int
+    var Y: Int
+    var U: Int
+    var V: Int
+    var index = 0
+    for (j in 0 until height) {
+        for (i in 0 until width) {
+            a = argb[index] and -0x1000000 shr 24 // a is not used obviously
+            R = argb[index] and 0xff0000 shr 16
+            G = argb[index] and 0xff00 shr 8
+            B = argb[index] and 0xff shr 0
+            //                R = (argb[index] & 0xff000000) >>> 24;
+//                G = (argb[index] & 0xff0000) >> 16;
+//                B = (argb[index] & 0xff00) >> 8;
+// well known RGB to YUV algorithm
+            Y = (66 * R + 129 * G + 25 * B + 128 shr 8) + 16
+            V = (-38 * R - 74 * G + 112 * B + 128 shr 8) + 128 // Previously U
+            U = (112 * R - 94 * G - 18 * B + 128 shr 8) + 128 // Previously V
+            yuv420sp[yIndex++] =
+                (if (Y < 0) 0 else if (Y > 255) 255 else Y).toByte()
+            if (j % 2 == 0 && index % 2 == 0) {
+                yuv420sp[yIndex + 1] =
+                    (if (V < 0) 0 else if (V > 255) 255 else V).toByte()
+                yuv420sp[yIndex + 3] =
+                    (if (U < 0) 0 else if (U > 255) 255 else U).toByte()
+            }
+            if (index % 2 == 0) {
+                yIndex++
+            }
+            index++
+        }
+    }
+}
+
+ fun encodeYUV420PP(
+    yuv420sp: ByteArray,
+    argb: IntArray,
+    width: Int,
+    height: Int
+) {
+    var yIndex = 0
+    var vIndex = yuv420sp.size / 2
+    var a: Int
+    var R: Int
+    var G: Int
+    var B: Int
+    var Y: Int
+    var U: Int
+    var V: Int
+    var index = 0
+    for (j in 0 until height) {
+        for (i in 0 until width) {
+            a = argb[index] and -0x1000000 shr 24 // a is not used obviously
+            R = argb[index] and 0xff0000 shr 16
+            G = argb[index] and 0xff00 shr 8
+            B = argb[index] and 0xff shr 0
+            //                R = (argb[index] & 0xff000000) >>> 24;
+//                G = (argb[index] & 0xff0000) >> 16;
+//                B = (argb[index] & 0xff00) >> 8;
+// well known RGB to YUV algorithm
+            Y = (66 * R + 129 * G + 25 * B + 128 shr 8) + 16
+            V = (-38 * R - 74 * G + 112 * B + 128 shr 8) + 128 // Previously U
+            U = (112 * R - 94 * G - 18 * B + 128 shr 8) + 128 // Previously V
+            if (j % 2 == 0 && index % 2 == 0) { // 0
                 yuv420sp[yIndex++] =
                     (if (Y < 0) 0 else if (Y > 255) 255 else Y).toByte()
-                if (j % 2 == 0 && index % 2 == 0) {
-                    yuv420sp[uvIndex++] =
-                        (if (V < 0) 0 else if (V > 255) 255 else V).toByte()
-                    yuv420sp[uvIndex++] =
-                        (if (U < 0) 0 else if (U > 255) 255 else U).toByte()
-                }
-                index++
-            }
-        }
-    }
-
-    private fun encodeYUV420P(
-        yuv420sp: ByteArray,
-        argb: IntArray,
-        width: Int,
-        height: Int
-    ) {
-        val frameSize = width * height
-        var yIndex = 0
-        var uIndex = frameSize
-        var vIndex = frameSize + width * height / 4
-        var a: Int
-        var R: Int
-        var G: Int
-        var B: Int
-        var Y: Int
-        var U: Int
-        var V: Int
-        var index = 0
-        for (j in 0 until height) {
-            for (i in 0 until width) {
-                a = argb[index] and -0x1000000 shr 24 // a is not used obviously
-                R = argb[index] and 0xff0000 shr 16
-                G = argb[index] and 0xff00 shr 8
-                B = argb[index] and 0xff shr 0
-                //                R = (argb[index] & 0xff000000) >>> 24;
-//                G = (argb[index] & 0xff0000) >> 16;
-//                B = (argb[index] & 0xff00) >> 8;
-// well known RGB to YUV algorithm
-                Y = (66 * R + 129 * G + 25 * B + 128 shr 8) + 16
-                V = (-38 * R - 74 * G + 112 * B + 128 shr 8) + 128 // Previously U
-                U = (112 * R - 94 * G - 18 * B + 128 shr 8) + 128 // Previously V
+                yuv420sp[yIndex + 1] =
+                    (if (V < 0) 0 else if (V > 255) 255 else V).toByte()
+                yuv420sp[vIndex + 1] =
+                    (if (U < 0) 0 else if (U > 255) 255 else U).toByte()
+                yIndex++
+            } else if (j % 2 == 0 && index % 2 == 1) { //1
                 yuv420sp[yIndex++] =
                     (if (Y < 0) 0 else if (Y > 255) 255 else Y).toByte()
-                if (j % 2 == 0 && index % 2 == 0) {
-                    yuv420sp[vIndex++] =
-                        (if (U < 0) 0 else if (U > 255) 255 else U).toByte()
-                    yuv420sp[uIndex++] =
-                        (if (V < 0) 0 else if (V > 255) 255 else V).toByte()
-                }
-                index++
-            }
-        }
-    }
-
-    private fun encodeYUV420PSP(
-        yuv420sp: ByteArray,
-        argb: IntArray,
-        width: Int,
-        height: Int
-    ) {
-        val frameSize = width * height
-        var yIndex = 0
-        //        int uvIndex = frameSize;
-        var a: Int
-        var R: Int
-        var G: Int
-        var B: Int
-        var Y: Int
-        var U: Int
-        var V: Int
-        var index = 0
-        for (j in 0 until height) {
-            for (i in 0 until width) {
-                a = argb[index] and -0x1000000 shr 24 // a is not used obviously
-                R = argb[index] and 0xff0000 shr 16
-                G = argb[index] and 0xff00 shr 8
-                B = argb[index] and 0xff shr 0
-                //                R = (argb[index] & 0xff000000) >>> 24;
-//                G = (argb[index] & 0xff0000) >> 16;
-//                B = (argb[index] & 0xff00) >> 8;
-// well known RGB to YUV algorithm
-                Y = (66 * R + 129 * G + 25 * B + 128 shr 8) + 16
-                V = (-38 * R - 74 * G + 112 * B + 128 shr 8) + 128 // Previously U
-                U = (112 * R - 94 * G - 18 * B + 128 shr 8) + 128 // Previously V
-                yuv420sp[yIndex++] =
+            } else if (j % 2 == 1 && index % 2 == 0) { //2
+                yuv420sp[vIndex++] =
                     (if (Y < 0) 0 else if (Y > 255) 255 else Y).toByte()
-                if (j % 2 == 0 && index % 2 == 0) {
-                    yuv420sp[yIndex + 1] =
-                        (if (V < 0) 0 else if (V > 255) 255 else V).toByte()
-                    yuv420sp[yIndex + 3] =
-                        (if (U < 0) 0 else if (U > 255) 255 else U).toByte()
-                }
-                if (index % 2 == 0) {
-                    yIndex++
-                }
-                index++
+                vIndex++
+            } else if (j % 2 == 1 && index % 2 == 1) { //3
+                yuv420sp[vIndex++] =
+                    (if (Y < 0) 0 else if (Y > 255) 255 else Y).toByte()
             }
+            index++
         }
     }
+}
 
-    private fun encodeYUV420PP(
-        yuv420sp: ByteArray,
-        argb: IntArray,
-        width: Int,
-        height: Int
-    ) {
-        var yIndex = 0
-        var vIndex = yuv420sp.size / 2
-        var a: Int
-        var R: Int
-        var G: Int
-        var B: Int
-        var Y: Int
-        var U: Int
-        var V: Int
-        var index = 0
-        for (j in 0 until height) {
-            for (i in 0 until width) {
-                a = argb[index] and -0x1000000 shr 24 // a is not used obviously
-                R = argb[index] and 0xff0000 shr 16
-                G = argb[index] and 0xff00 shr 8
-                B = argb[index] and 0xff shr 0
-                //                R = (argb[index] & 0xff000000) >>> 24;
-//                G = (argb[index] & 0xff0000) >> 16;
-//                B = (argb[index] & 0xff00) >> 8;
-// well known RGB to YUV algorithm
-                Y = (66 * R + 129 * G + 25 * B + 128 shr 8) + 16
-                V = (-38 * R - 74 * G + 112 * B + 128 shr 8) + 128 // Previously U
-                U = (112 * R - 94 * G - 18 * B + 128 shr 8) + 128 // Previously V
-                if (j % 2 == 0 && index % 2 == 0) { // 0
-                    yuv420sp[yIndex++] =
-                        (if (Y < 0) 0 else if (Y > 255) 255 else Y).toByte()
-                    yuv420sp[yIndex + 1] =
-                        (if (V < 0) 0 else if (V > 255) 255 else V).toByte()
-                    yuv420sp[vIndex + 1] =
-                        (if (U < 0) 0 else if (U > 255) 255 else U).toByte()
-                    yIndex++
-                } else if (j % 2 == 0 && index % 2 == 1) { //1
-                    yuv420sp[yIndex++] =
-                        (if (Y < 0) 0 else if (Y > 255) 255 else Y).toByte()
-                } else if (j % 2 == 1 && index % 2 == 0) { //2
-                    yuv420sp[vIndex++] =
-                        (if (Y < 0) 0 else if (Y > 255) 255 else Y).toByte()
-                    vIndex++
-                } else if (j % 2 == 1 && index % 2 == 1) { //3
-                    yuv420sp[vIndex++] =
-                        (if (Y < 0) 0 else if (Y > 255) 255 else Y).toByte()
-                }
-                index++
-            }
-        }
-    }
-
-    fun getMediaCodecList(): IntArray? { //获取解码器列表
-        val numCodecs = MediaCodecList.getCodecCount()
-        var codecInfo: MediaCodecInfo? = null
-        var i = 0
-        while (i < numCodecs && codecInfo == null) {
-            val info = MediaCodecList.getCodecInfoAt(i)
-            if (!info.isEncoder) {
-                i++
-                continue
-            }
-            val types = info.supportedTypes
-            var found = false
-            //轮训所要的解码器
-            var j = 0
-            while (j < types.size && !found) {
-                if (types[j] == "video/avc") {
-                    found = true
-                }
-                j++
-            }
-            if (!found) {
-                i++
-                continue
-            }
-            codecInfo = info
+fun getMediaCodecList(): IntArray? { //获取解码器列表
+    val numCodecs = MediaCodecList.getCodecCount()
+    var codecInfo: MediaCodecInfo? = null
+    var i = 0
+    while (i < numCodecs && codecInfo == null) {
+        val info = MediaCodecList.getCodecInfoAt(i)
+        if (!info.isEncoder) {
             i++
+            continue
         }
-        Log.e(
-            "ok",
-            "found" + codecInfo!!.name + "supporting" + " video/avc"
-        )
-        val capabilities = codecInfo.getCapabilitiesForType("video/avc")
-        return capabilities.colorFormats
+        val types = info.supportedTypes
+        var found = false
+        //轮训所要的解码器
+        var j = 0
+        while (j < types.size && !found) {
+            if (types[j] == "video/avc") {
+                found = true
+            }
+            j++
+        }
+        if (!found) {
+            i++
+            continue
+        }
+        codecInfo = info
+        i++
     }
+    Log.e(
+        "ok",
+        "found" + codecInfo!!.name + "supporting" + " video/avc"
+    )
+    val capabilities = codecInfo.getCapabilitiesForType("video/avc")
+    return capabilities.colorFormats
 }
-
-fun main() {
-    var meta_color_DURATION = 10000
-    var meta_color_FRAME_COUNT = 150
-    var frameindex_masktime = 0L
-
-    println("flase ${false &&false}")
-//    for(i in 0 until  150){
-//        println(i.toFloat()/15*1000000)
-//        println(132 + i.toLong() * 1000000 / 15)
-//
-//    }
-
+//    <editor-fold desc ="获取view图片">
+ fun loadBitmapFromView(v: View, w: Int, h: Int): Bitmap {
+    var bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+    var c = Canvas(bmp)
+    c.drawColor(Color.WHITE)
+    /** 如果不设置canvas画布为白色，则生成透明  */
+    v.layout(0, 0, w, h)
+    v.draw(c)
+//        imageView3.setImageBitmap(bmp)
+    return bmp
 }
+//</editor-fold>
